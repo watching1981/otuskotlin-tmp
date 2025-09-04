@@ -1,21 +1,19 @@
 plugins {
-    kotlin("jvm") version "2.0.10"
+   kotlin("jvm") apply false
 }
 
 group = "com.github.watching1981"
 version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
+
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+subprojects {
+    group =rootProject.group
+    version =rootProject.version
 }
 
-dependencies {
-    testImplementation(kotlin("test"))
-}
-
-tasks.test {
-    useJUnitPlatform()
-}
-kotlin {
-    jvmToolchain(21)
-}
