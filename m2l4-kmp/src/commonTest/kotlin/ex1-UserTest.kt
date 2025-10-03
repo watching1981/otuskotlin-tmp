@@ -11,5 +11,6 @@ class UserTest {
         assertEquals("1", user.id)
         assertEquals("Ivan", user.name)
         assertEquals(24, user.age)
+        println("Ok")
     }
 }
