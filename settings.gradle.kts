@@ -10,4 +10,4 @@ plugins {
 
 rootProject.name = "otuskotlin-tmp"
 
-include("m1l1-hw")
+include("m1l1-hw", "m1l2-basic","m2l4-kmp")

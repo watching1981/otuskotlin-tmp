@@ -1,19 +1,19 @@
+
 plugins {
-   kotlin("jvm") apply false
+    kotlin("jvm") apply false
 }
 
 group = "com.github.watching1981"
-version = "1.0-SNAPSHOT"
+version = "0.0.1"
 
+repositories {
+    mavenCentral()
+}
 
-
-allprojects {
+subprojects {
     repositories {
         mavenCentral()
     }
+    group = rootProject.group
+    version = rootProject.version
 }
-subprojects {
-    group =rootProject.group
-    version =rootProject.version
-}
-
