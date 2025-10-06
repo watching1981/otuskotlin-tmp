@@ -13,6 +13,7 @@ plugins {
 
 dependencies {
     testImplementation(kotlin("test-junit5"))
+    implementation(libs.kotlinx.datetime)
 }
 
 tasks.test {
