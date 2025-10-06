@@ -19,7 +19,7 @@ kotlin {
 
 
     val coroutinesVersion: String by project
-    val datetimeVersion: String by project
+//    val datetimeVersion: String by project
 
     // Description of modules corresponding to our target platforms
     //  common - common code that we can use on different platforms
@@ -29,7 +29,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
+//                implementation("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
             }
         }
         commonTest {

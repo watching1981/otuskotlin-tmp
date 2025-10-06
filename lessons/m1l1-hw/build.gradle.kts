@@ -1,15 +1,11 @@
 import org.jetbrains.kotlin.gradle.internal.ensureParentDirsCreated
 
-plugins {
-    kotlin("jvm")
-}
-
-//group = "com.github.watching1981"
-//version = "1.0-SNAPSHOT"
-
-//repositories {
-//    mavenCentral()
+//plugins {
+//    kotlin("jvm")
 //}
+plugins {
+    id("build-jvm")
+}
 
 dependencies {
     testImplementation(kotlin("test-junit5"))
