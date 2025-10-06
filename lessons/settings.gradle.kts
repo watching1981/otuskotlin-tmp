@@ -8,6 +8,6 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
 }
 
-rootProject.name = "otuskotlin-tmp"
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-includeBuild("lessons")
+rootProject.name = "lessons"
+
+include("m1l1-hw", "m1l2-basic","m2l4-kmp")
