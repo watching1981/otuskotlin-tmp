@@ -1,12 +1,18 @@
+//plugins {
+//    kotlin("multiplatform")
+//    // Только для lombok!!
+//   // java
+//}
+
+
 plugins {
-    kotlin("multiplatform")
-    // Только для lombok!!
-   // java
+    id("build-kmp")
 }
 
-repositories {
-    mavenCentral()
-}
+
+//repositories {
+//    mavenCentral()
+//}
 
 kotlin {
     jvm {
