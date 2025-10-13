@@ -1,7 +1,7 @@
 package ru.otus.otuskotlin.kmp
 
-import org.junit.jupiter.api.Test
-//import kotlin.test.Test
+//import org.junit.jupiter.api.Test
+import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertTrue
 
