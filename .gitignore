@@ -1,5 +1,6 @@
 /.gradle/
 **/build/
+**/m1l2-basic/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/**/build/
 

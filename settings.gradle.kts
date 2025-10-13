@@ -9,5 +9,7 @@ plugins {
 }
 
 rootProject.name = "otuskotlin-tmp"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+includeBuild("lessons")
+includeBuild("FilippovMAproject")
 
-include("m1l1-hw")

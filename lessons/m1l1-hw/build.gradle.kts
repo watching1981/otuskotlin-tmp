@@ -1,0 +1,60 @@
+import org.jetbrains.kotlin.gradle.internal.ensureParentDirsCreated
+
+//plugins {
+//    kotlin("jvm")
+//}
+plugins {
+    id("build-jvm")
+}
+
+dependencies {
+    testImplementation(kotlin("test-junit5"))
+    implementation(libs.kotlinx.datetime)
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+kotlin {
+    jvmToolchain(17)
+}
+
+
+tasks {
+    // Таска для создания файла
+    val myCustomTask by creating {
+        group = "my group"
+        val dir = layout.buildDirectory.dir("my-in")
+        outputs.dir(dir)
+
+        doFirst {
+            val fileContent = """
+                package my.x
+                
+                const val MY_VERSION: String = "${project.version}"
+            """.trimIndent()
+            dir
+                .get()
+                .file("my-version.kt")
+                .asFile
+                .apply {
+                    ensureParentDirsCreated()
+                    writeText(fileContent)
+                }
+        }
+    }
+
+    val myCopyTask by creating(Copy::class) {
+        dependsOn(myCustomTask)
+
+        group = "my group"
+        from(myCustomTask.outputs)
+        into(layout.buildDirectory.dir("tmp"))
+    }
+
+    compileKotlin {
+        println(layout.projectDirectory.dir("src/jvmMain/kotlin"))
+        source(layout.buildDirectory.dir("my-in"), layout.projectDirectory.dir("src/jvmMain/kotlin"))
+        dependsOn(myCopyTask)
+    }
+}
