@@ -1,4 +1,4 @@
-/.gradle/
+.gradle/
 **/build/
 
 !gradle/wrapper/gradle-wrapper.jar
@@ -10,5 +10,5 @@
 /.gigaide/
 /.kotlin/
 **/*.iml
-
+**/.gradle/
 
