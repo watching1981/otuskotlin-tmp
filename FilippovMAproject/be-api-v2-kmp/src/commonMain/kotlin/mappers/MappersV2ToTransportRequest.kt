@@ -11,6 +11,7 @@ fun MkplAd.toTransportCreateAd() = AdCreateObject(
     title = title,
     description = description,
     adType = adType.toTransportAd(),
+    location =location,
     status = status.toTransportAd(),
     )
 

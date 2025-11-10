@@ -11,14 +11,7 @@ object MkplAdStub {
 
     fun prepareResult(block: MkplAd.() -> Unit): MkplAd = get().apply(block)
 
-//    fun prepareSearchList(filter: String, type: MkplDealSide) = listOf(
-//        mkplAdDemand("18345", filter, type),
-//        mkplAdDemand("18345", filter, type),
-//        mkplAdDemand("18347", filter, type),
-//        mkplAdDemand("18348", filter, type),
-//        mkplAdDemand("18349", filter, type),
-//        mkplAdDemand("18350", filter, type),
-//    )
+
 
     fun prepareOffersList(filter: String, type: MkplDealSide) = listOf(
         mkplAdSupply("18345", filter, type),

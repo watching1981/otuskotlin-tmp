@@ -10,6 +10,7 @@ object MkplAdStubCars {
             description = "Toyota Camry не старше 2006 г",
             ownerId = MkplUserId("user-1"),
             adType = MkplDealSide.DEMAND,
+            location = "",
             status = MkplStatus.ACTIVE,
             lock = MkplAdLock("123"),
             permissionsClient = mutableSetOf(
