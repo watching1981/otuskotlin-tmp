@@ -1,20 +1,12 @@
 import org.junit.Test
 import com.github.watching1981.api.v1.models.*
-import com.github.watching1981.api.v1.models.AdCreateResponse
-
 import com.github.watching1981.common.*
 import com.github.watching1981.common.models.*
-
 import com.github.watching1981.mappers.v1.fromTransport
-//import com.github.watching1981.mappers.v1.toTransportAd
 import kotlin.test.assertEquals
-import com.github.watching1981.api.v1.models.*
-
-
-import com.github.watching1981.common.exceptions.UnknownMkplCommand
-import com.github.watching1981.common.models.*
 import com.github.watching1981.mappers.v1.toAdCreateResponse
-import kotlinx.datetime.Clock
+import com.github.watching1981.mappers.v1.toTransportAd
+
 
 class MapperTest {
     private val sampleCarInfo = CarInfo(
@@ -81,7 +73,7 @@ class MapperTest {
             adResponse = createSampleAdvertisement()
         }
 
-        val response = context.toAdCreateResponse()
+       val response = context.toTransportAd()as AdCreateResponse
 
         assertEquals(null, response.result)
         assertEquals(0, response.errors?.size ?: 0)

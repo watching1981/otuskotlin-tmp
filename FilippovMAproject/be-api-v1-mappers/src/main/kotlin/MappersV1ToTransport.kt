@@ -1,9 +1,7 @@
 package com.github.watching1981.mappers.v1
 
 import com.github.watching1981.api.v1.models.*
-
 import com.github.watching1981.common.MkplContext
-import com.github.watching1981.common.exceptions.UnknownMkplCommand
 import com.github.watching1981.common.models.*
 import kotlinx.datetime.Clock
 
@@ -73,7 +71,7 @@ private fun MkplAdvertisement.toAdData(): AdData = AdData(
     id = this.id.toTransportAd(),
     title = this.title,
     description = this.description,
-    price = this.price.toDouble(),
+    price = this.price,
     carInfo = this.car.toCarInfo(),
     status = this.status.toTransport(),
     location = this.location,

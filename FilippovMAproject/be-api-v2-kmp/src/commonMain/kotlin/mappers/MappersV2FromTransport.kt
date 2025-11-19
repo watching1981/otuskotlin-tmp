@@ -41,7 +41,7 @@ private fun AdGetRequest?.toBusiness(): MkplAdvertisement = if (this != null) {
 
 fun MkplContext.fromTransport(request: AdCreateRequest) {
     command = MkplCommand.CREATE
-    adRequest = request.toBusiness()?: MkplAdvertisement()
+    adRequest = request.toBusiness()
 }
 fun CarInfo.fromTransport():MkplCar= MkplCar(
     brand = this.brand,
@@ -85,7 +85,7 @@ private fun AdCreateRequest.toBusiness(): MkplAdvertisement = MkplAdvertisement(
 
 fun MkplContext.fromTransport(request: AdUpdateRequest) {
     command = MkplCommand.UPDATE
-    adRequest = request.toBusiness() ?: MkplAdvertisement()
+    adRequest = request.toBusiness()
 }
 fun AdUpdateRequest.toBusiness(): MkplAdvertisement = MkplAdvertisement(
     id = this.id.toAdId(),
