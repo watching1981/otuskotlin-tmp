@@ -5,12 +5,11 @@ package com.github.watching1981.api.v2
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import com.github.watching1981.api.v2.models.IRequest
-import com.github.watching1981.api.v2.models.IResponse
+import com.github.watching1981.api.v2.models.BaseResponse
 
 @OptIn(ExperimentalSerializationApi::class)
 @Suppress("JSON_FORMAT_REDUNDANT_DEFAULT")
 val apiV2Mapper = Json {
-//    ignoreUnknownKeys = true
     allowTrailingComma = true
 }
 
@@ -18,14 +17,14 @@ val apiV2Mapper = Json {
 fun <T : IRequest> apiV2RequestDeserialize(json: String) =
     apiV2Mapper.decodeFromString<IRequest>(json) as T
 
-fun apiV2ResponseSerialize(obj: IResponse): String =
-    apiV2Mapper.encodeToString(IResponse.serializer(), obj)
+fun apiV2ResponseSerialize(obj: BaseResponse): String =
+    apiV2Mapper.encodeToString(BaseResponse.serializer(), obj)
 
 @Suppress("UNCHECKED_CAST")
-fun <T : IResponse> apiV2ResponseDeserialize(json: String) =
-    apiV2Mapper.decodeFromString<IResponse>(json) as T
+fun <T : BaseResponse> apiV2ResponseDeserialize(json: String) =
+    apiV2Mapper.decodeFromString<BaseResponse>(json) as T
 
-inline fun <reified T : IResponse> apiV2ResponseSimpleDeserialize(json: String) =
+inline fun <reified T : BaseResponse> apiV2ResponseSimpleDeserialize(json: String) =
     apiV2Mapper.decodeFromString<T>(json)
 
 @Suppress("unused")

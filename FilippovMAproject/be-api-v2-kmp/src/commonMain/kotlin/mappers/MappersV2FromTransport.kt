@@ -4,129 +4,153 @@ import com.github.watching1981.api.v2.models.*
 
 import com.github.watching1981.common.MkplContext
 import com.github.watching1981.common.models.*
-import com.github.watching1981.common.models.MkplWorkMode
-import com.github.watching1981.common.stubs.MkplStubs
+
+
+//import com.github.watching1981.mappers.v1.exceptions.UnknownRequestClass
+import kotlinx.datetime.Clock
+
+
+
+
 
 fun MkplContext.fromTransport(request: IRequest) = when (request) {
     is AdCreateRequest -> fromTransport(request)
-    is AdReadRequest -> fromTransport(request)
+    is AdGetRequest -> fromTransport(request)
     is AdUpdateRequest -> fromTransport(request)
     is AdDeleteRequest -> fromTransport(request)
     is AdSearchRequest -> fromTransport(request)
-    is AdOffersRequest -> fromTransport(request)
+
 }
 
-private fun String?.toAdId() = this?.let { MkplAdId(it) } ?: MkplAdId.NONE
+private fun Long?.toAdId() = this?.let { McplAdvertisementId(it) } ?: McplAdvertisementId.NONE
 private fun String?.toAdLock() = this?.let { MkplAdLock(it) } ?: MkplAdLock.NONE
-private fun AdReadObject?.toInternal() = if (this != null) {
-    MkplAd(id = id.toAdId())
+
+
+fun MkplContext.fromTransport(request: AdGetRequest) {
+    command = MkplCommand.GET
+    adRequest = request.toBusiness()
+}
+
+private fun AdGetRequest?.toBusiness(): MkplAdvertisement = if (this != null) {
+    MkplAdvertisement(id = id.toAdId())
 } else {
-    MkplAd()
+    MkplAdvertisement()
 }
 
 
-private fun AdDebug?.transportToWorkMode(): MkplWorkMode = when (this?.mode) {
-    AdRequestDebugMode.PROD -> MkplWorkMode.PROD
-    AdRequestDebugMode.TEST -> MkplWorkMode.TEST
-    AdRequestDebugMode.STUB -> MkplWorkMode.STUB
-    null -> MkplWorkMode.PROD
-}
-
-private fun AdDebug?.transportToStubCase(): MkplStubs = when (this?.stub) {
-    AdRequestDebugStubs.SUCCESS -> MkplStubs.SUCCESS
-    AdRequestDebugStubs.NOT_FOUND -> MkplStubs.NOT_FOUND
-    AdRequestDebugStubs.BAD_ID -> MkplStubs.BAD_ID
-    AdRequestDebugStubs.BAD_TITLE -> MkplStubs.BAD_TITLE
-    AdRequestDebugStubs.BAD_DESCRIPTION -> MkplStubs.BAD_DESCRIPTION
-    AdRequestDebugStubs.BAD_VISIBILITY -> MkplStubs.BAD_VISIBILITY
-    AdRequestDebugStubs.CANNOT_DELETE -> MkplStubs.CANNOT_DELETE
-    AdRequestDebugStubs.BAD_SEARCH_STRING -> MkplStubs.BAD_SEARCH_STRING
-    null -> MkplStubs.NONE
-}
 
 fun MkplContext.fromTransport(request: AdCreateRequest) {
     command = MkplCommand.CREATE
-    adRequest = request.ad?.toInternal() ?: MkplAd()
-    workMode = request.debug.transportToWorkMode()
-    stubCase = request.debug.transportToStubCase()
+    adRequest = request.toBusiness()?: MkplAdvertisement()
+}
+fun CarInfo.fromTransport():MkplCar= MkplCar(
+    brand = this.brand,
+    model = this.model,
+    year = this.year,
+    mileage = this.mileage ?: 0,
+    color = this.color ?: "",
+    engine = MkplEngine(
+        type = this.engineType?.fromTransport() ?:MkplEngineType.GASOLINE ,
+        volume = this.engineVolume ?: 0.0,
+        horsePower = this.horsePower
+    ),
+    transmission = this.transmission?.fromTransport()?:MkplTransmission.MANUAL
+)
+fun EngineType.fromTransport():MkplEngineType= when(this) {
+    EngineType.GASOLINE -> MkplEngineType.GASOLINE
+    EngineType.DIESEL -> MkplEngineType.DIESEL
+    EngineType.HYBRID -> MkplEngineType.HYBRID
+    EngineType.ELECTRIC->MkplEngineType.ELECTRIC
+}
+fun Transmission.fromTransport():MkplTransmission=when(this) {
+    Transmission.AUTOMATIC ->MkplTransmission.AUTOMATIC
+    Transmission.MANUAL ->MkplTransmission.MANUAL
+    Transmission.ROBOT ->MkplTransmission.ROBOT
+    Transmission.VARIATOR ->MkplTransmission.VARIATOR
 }
 
-fun MkplContext.fromTransport(request: AdReadRequest) {
-    command = MkplCommand.READ
-    adRequest = request.ad.toInternal()
-    workMode = request.debug.transportToWorkMode()
-    stubCase = request.debug.transportToStubCase()
-}
+private fun AdCreateRequest.toBusiness(): MkplAdvertisement = MkplAdvertisement(
+    id = McplAdvertisementId.NONE,
+    title = this.title,
+    description = this.description,
+    price = this.price,
+    car = this.carInfo.fromTransport(),
+    status = McplAdvertisementStatus.DRAFT,
+    location = this.location ?: "",
+    contactPhone = this.contactPhone ?: "",
+    createdAt = Clock.System.now(),
+    updatedAt = Clock.System.now(),
+)
+
 
 fun MkplContext.fromTransport(request: AdUpdateRequest) {
     command = MkplCommand.UPDATE
-    adRequest = request.ad?.toInternal() ?: MkplAd()
-    workMode = request.debug.transportToWorkMode()
-    stubCase = request.debug.transportToStubCase()
+    adRequest = request.toBusiness() ?: MkplAdvertisement()
 }
+fun AdUpdateRequest.toBusiness(): MkplAdvertisement = MkplAdvertisement(
+    id = this.id.toAdId(),
+    title = this.title ?: "",
+    description = this.description ?: "",
+    price = this.price?: 0.0,
+    status = this.status.fromTransport(),
+    car = this.carInfo?.fromTransport() ?: MkplCar.NONE,
+    updatedAt = Clock.System.now(),
+    lock = lock.toAdLock(),
+)
 
 fun MkplContext.fromTransport(request: AdDeleteRequest) {
     command = MkplCommand.DELETE
-    adRequest = request.ad.toInternal()
-    workMode = request.debug.transportToWorkMode()
-    stubCase = request.debug.transportToStubCase()
+    adRequest = request.toBusiness()
 }
 
-private fun AdDeleteObject?.toInternal(): MkplAd = if (this != null) {
-    MkplAd(
+private fun AdDeleteRequest.toBusiness(): MkplAdvertisement = if (this != null) {
+    MkplAdvertisement(
         id = id.toAdId(),
         lock = lock.toAdLock(),
     )
 } else {
-    MkplAd()
+    MkplAdvertisement()
 }
 
 fun MkplContext.fromTransport(request: AdSearchRequest) {
     command = MkplCommand.SEARCH
-    adFilterRequest = request.adFilter.toInternal()
-    workMode = request.debug.transportToWorkMode()
-    stubCase = request.debug.transportToStubCase()
-}
+    adFilterRequest = request.toBusiness()
 
-fun MkplContext.fromTransport(request: AdOffersRequest) {
-    command = MkplCommand.OFFERS
-    adRequest = request.ad.toInternal()
-    workMode = request.debug.transportToWorkMode()
-    stubCase = request.debug.transportToStubCase()
 }
-
-private fun AdSearchFilter?.toInternal(): MkplAdFilter = MkplAdFilter(
-    searchString = this?.searchString ?: ""
+fun AdSearchRequest.toBusiness(): MkplAdvertisementSearch = MkplAdvertisementSearch(
+    filters = MkplAdvertisementFilters(
+        brand = this.brand,
+        model = this.model,
+        minYear = this.minYear,
+        maxYear = this.maxYear,
+        minPrice = this.minPrice,
+        maxPrice = this.maxPrice,
+        location = this.location
+    ),
+    pagination = MkplPagination(
+        page = this.page ?: 0,
+        size = this.propertySize ?: 20
+    ),
+    sort = MkplSortOptions(
+        field = MkplSortField.CREATED_AT, // По умолчанию
+        direction = MkplSortDirection.DESC
+    )
 )
 
-private fun AdCreateObject.toInternal(): MkplAd = MkplAd(
-    title = this.title ?: "",
-    description = this.description ?: "",
-    location = this.location ?: "",
-    adType = this.adType.fromTransport(),
-    status = this.status.fromTransport(),
-)
 
-private fun AdUpdateObject.toInternal(): MkplAd = MkplAd(
-    id = this.id.toAdId(),
-    title = this.title ?: "",
-    description = this.description ?: "",
-    location = this.location ?: "",
-    adType = this.adType.fromTransport(),
-    status = this.status.fromTransport(),
-    lock = this.lock.toAdLock(),
-)
 
-private fun AdStatus?.fromTransport(): MkplStatus = when (this) {
-    AdStatus.ACTIVE -> MkplStatus.ACTIVE
-    AdStatus.DRAFT -> MkplStatus.DRAFT
-    AdStatus.CLOSED -> MkplStatus.CLOSED
-    AdStatus.ARCHIVED -> MkplStatus.ARCHIVED
-    null -> MkplStatus.NONE
+private fun AdStatus?.fromTransport(): McplAdvertisementStatus = when (this) {
+    AdStatus.ACTIVE -> McplAdvertisementStatus.ACTIVE
+    AdStatus.DRAFT -> McplAdvertisementStatus.DRAFT
+    AdStatus.SOLD -> McplAdvertisementStatus.SOLD
+    AdStatus.ARCHIVED -> McplAdvertisementStatus.ARCHIVED
+    null -> McplAdvertisementStatus.NONE
 }
 
-private fun DealSide?.fromTransport(): MkplDealSide = when (this) {
-    DealSide.DEMAND -> MkplDealSide.DEMAND
-    DealSide.SUPPLY -> MkplDealSide.SUPPLY
-    null -> MkplDealSide.NONE
-}
+
+
+
+
+
+
+

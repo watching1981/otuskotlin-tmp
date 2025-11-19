@@ -3,9 +3,8 @@ package com.github.watching1981.common.models
 enum class MkplCommand {
     NONE,
     CREATE,
-    READ,
+    GET,
     UPDATE,
     DELETE,
     SEARCH,
-    OFFERS,
 }

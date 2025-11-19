@@ -1,29 +1,37 @@
 package com.github.watching1981.api.v2
-import com.github.watching1981.api.v2.models.AdCreateObject
-import com.github.watching1981.api.v2.models.AdCreateRequest
-import com.github.watching1981.api.v2.models.AdDebug
-import com.github.watching1981.api.v2.models.AdRequestDebugMode
-import com.github.watching1981.api.v2.models.AdRequestDebugStubs
-import com.github.watching1981.api.v2.models.AdStatus
-import com.github.watching1981.api.v2.models.DealSide
-import com.github.watching1981.api.v2.models.IRequest
+import com.github.watching1981.api.v2.models.*
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
+import kotlinx.serialization.json.Json
 
 class RequestV2SerializationTest {
+
+
+    private val json = Json {
+        encodeDefaults = true
+        ignoreUnknownKeys = true
+        isLenient = true
+    }
+
     private val request: IRequest = AdCreateRequest(
-        debug = AdDebug(
-            mode = AdRequestDebugMode.STUB,
-            stub = AdRequestDebugStubs.BAD_TITLE
+        title = "Toyota Camry 2019 года в отличном состоянии",
+        description = "Автомобиль в идеальном состоянии, один хозяин, полная сервисная история. Без ДТП.",
+        price = 1500000.0,
+        carInfo = CarInfo(
+            brand = "Toyota",
+            model = "Camry",
+            year = 2018,
+            mileage = 75000,
+            color = "Черный",
+            engineType = EngineType.GASOLINE,
+            engineVolume = 2.5,
+            transmission = Transmission.AUTOMATIC
         ),
-        ad = AdCreateObject(
-            title = "ad title",
-            description = "ad description",
-            adType = DealSide.DEMAND,
-            status = AdStatus.ACTIVE,
-        )
+        location = "Москва",
+        contactPhone = "+79991234567"
     )
+
 
     @Test
     fun serialize() {
@@ -31,9 +39,7 @@ class RequestV2SerializationTest {
 
         println(json)
 
-        assertContains(json, Regex("\"title\":\\s*\"ad title\""))
-        assertContains(json, Regex("\"mode\":\\s*\"stub\""))
-        assertContains(json, Regex("\"stub\":\\s*\"badTitle\""))
+        assertContains(json, Regex("\"title\":\\s*\"Toyota Camry 2019 года в отличном состоянии\""))
         assertContains(json, Regex("\"requestType\":\\s*\"create\""))
     }
 
@@ -46,12 +52,39 @@ class RequestV2SerializationTest {
     }
 
     @Test
-    fun deserializeNaked() {
-        val jsonString = """
-            {"ad": null}
-        """.trimIndent()
-        val obj = apiV2Mapper.decodeFromString<AdCreateRequest>(jsonString)
+    fun `serialize all request types`() {
+        val requests = listOf(
+            request,
+            AdGetRequest( id = 123),
+            AdSearchRequest(
+                brand = "Toyota",
+                minYear = 2015,
+                maxYear = 2020,
+                minPrice = 1000000.0,
+                maxPrice = 2000000.0,
+                page = 0,
+                propertySize = 20
+            ),
+            AdUpdateRequest(
+                id = 123,
+                lock = "lock-123",
+                title = "Обновленное название",
+                description = "Обновленное описание",
+                price = 1400000.0
+            ),
+            AdDeleteRequest(
+                id = 123,
+                lock = "lock-123"
+            )
+        )
 
-        assertEquals(null, obj.ad)
+        println("=== ALL REQUEST TYPES KMP ===")
+        requests.forEach { request ->
+            val jsonString = json.encodeToString(request)
+            println(jsonString)
+            println("---")
+        }
+        println("=============================")
     }
+
 }

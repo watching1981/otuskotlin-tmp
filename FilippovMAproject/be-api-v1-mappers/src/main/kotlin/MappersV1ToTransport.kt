@@ -1,122 +1,120 @@
 package com.github.watching1981.mappers.v1
 
-import com.github.watching1981.api.v1.models.AdCreateResponse
-import com.github.watching1981.api.v1.models.AdDeleteResponse
-import com.github.watching1981.api.v1.models.AdOffersResponse
-import com.github.watching1981.api.v1.models.AdPermissions
-import com.github.watching1981.api.v1.models.AdReadResponse
-import com.github.watching1981.api.v1.models.AdResponseObject
-import com.github.watching1981.api.v1.models.AdSearchResponse
-import com.github.watching1981.api.v1.models.AdUpdateResponse
-import com.github.watching1981.api.v1.models.AdStatus
-import com.github.watching1981.api.v1.models.DealSide
-import com.github.watching1981.api.v1.models.Error
-import com.github.watching1981.api.v1.models.IResponse
-import com.github.watching1981.api.v1.models.ResponseResult
+import com.github.watching1981.api.v1.models.*
+
 import com.github.watching1981.common.MkplContext
 import com.github.watching1981.common.exceptions.UnknownMkplCommand
-import com.github.watching1981.common.models.MkplAd
-import com.github.watching1981.common.models.MkplAdId
-import com.github.watching1981.common.models.MkplAdPermissionClient
-import com.github.watching1981.common.models.MkplCommand
-import com.github.watching1981.common.models.MkplDealSide
-import com.github.watching1981.common.models.MkplError
-import com.github.watching1981.common.models.MkplState
-import com.github.watching1981.common.models.MkplUserId
-import com.github.watching1981.common.models.MkplStatus
+import com.github.watching1981.common.models.*
+import kotlinx.datetime.Clock
 
-fun MkplContext.toTransportAd(): IResponse = when (val cmd = command) {
-    MkplCommand.CREATE -> toTransportCreate()
-    MkplCommand.READ -> toTransportRead()
-    MkplCommand.UPDATE -> toTransportUpdate()
-    MkplCommand.DELETE -> toTransportDelete()
-    MkplCommand.SEARCH -> toTransportSearch()
-    MkplCommand.OFFERS -> toTransportOffers()
-    MkplCommand.NONE -> throw UnknownMkplCommand(cmd)
-}
 
-fun MkplContext.toTransportCreate() = AdCreateResponse(
-    result = state.toResult(),
-    errors = errors.toTransportErrors(),
-    ad = adResponse.toTransportAd(),
-)
-
-fun MkplContext.toTransportRead() = AdReadResponse(
-    result = state.toResult(),
-    errors = errors.toTransportErrors(),
-    ad = adResponse.toTransportAd()
-)
-
-fun MkplContext.toTransportUpdate() = AdUpdateResponse(
-    result = state.toResult(),
-    errors = errors.toTransportErrors(),
-    ad = adResponse.toTransportAd()
-)
-
-fun MkplContext.toTransportDelete() = AdDeleteResponse(
-    result = state.toResult(),
-    errors = errors.toTransportErrors(),
-    ad = adResponse.toTransportAd()
-)
-
-fun MkplContext.toTransportSearch() = AdSearchResponse(
-    result = state.toResult(),
-    errors = errors.toTransportErrors(),
-    ads = adsResponse.toTransportAd()
-)
-
-fun MkplContext.toTransportOffers() = AdOffersResponse(
-    result = state.toResult(),
-    errors = errors.toTransportErrors(),
-    ads = adsResponse.toTransportAd()
-)
-
-fun List<MkplAd>.toTransportAd(): List<AdResponseObject>? = this
-    .map { it.toTransportAd() }
-    .toList()
-    .takeIf { it.isNotEmpty() }
-
-fun MkplAd.toTransportAd(): AdResponseObject = AdResponseObject(
-    id = id.toTransportAd(),
-    title = title.takeIf { it.isNotBlank() },
-    description = description.takeIf { it.isNotBlank() },
-    ownerId = ownerId.takeIf { it != MkplUserId.NONE }?.asString(),
-    adType = adType.toTransportAd(),
-    status = status.toTransportAd(),
-    permissions = permissionsClient.toTransportAd(),
-)
-
-internal fun MkplAdId.toTransportAd() = takeIf { it != MkplAdId.NONE }?.asString()
-
-private fun Set<MkplAdPermissionClient>.toTransportAd(): Set<AdPermissions>? = this
-    .map { it.toTransportAd() }
-    .toSet()
-    .takeIf { it.isNotEmpty() }
-
-private fun MkplAdPermissionClient.toTransportAd() = when (this) {
-    MkplAdPermissionClient.READ -> AdPermissions.READ
-    MkplAdPermissionClient.UPDATE -> AdPermissions.UPDATE
-    MkplAdPermissionClient.MAKE_VISIBLE_OWNER -> AdPermissions.MAKE_VISIBLE_OWN
-    MkplAdPermissionClient.MAKE_VISIBLE_PUBLIC -> AdPermissions.MAKE_VISIBLE_PUBLIC
-    MkplAdPermissionClient.DELETE -> AdPermissions.DELETE
+fun MkplContext.toTransportAd(): Any = when (this.command) {
+    MkplCommand.CREATE -> this.toAdCreateResponse()
+    MkplCommand.GET -> this.toAdGetResponse()  // GET -> READ
+    MkplCommand.UPDATE -> this.toAdUpdateResponse()
+    MkplCommand.DELETE -> this.toAdDeleteResponse()
+    MkplCommand.SEARCH -> this.toAdSearchResponse()
+    MkplCommand.NONE -> throw IllegalStateException("No command specified in context")
 }
 
 
+private fun Long?.toAdId() = this?.let { McplAdvertisementId(it) } ?: McplAdvertisementId.NONE
 
-internal fun MkplStatus.toTransportAd(): AdStatus? = when (this) {
-    MkplStatus.ACTIVE->  AdStatus.ACTIVE
-    MkplStatus.DRAFT -> AdStatus.DRAFT
-    MkplStatus.CLOSED -> AdStatus.CLOSED
-    MkplStatus.ARCHIVED -> AdStatus.ARCHIVED
-    MkplStatus.NONE -> null
+fun MkplContext.toAdCreateResponse(): AdCreateResponse =
+    AdCreateResponse(
+        result = state.toResult(),
+        errors = errors.toTransportErrors(),
+        timestamp = Clock.System.now().toString(),
+        ad = this.adResponse.toAdData(),
+        adId = this.adResponse.id.toTransportAd()
+    )
+fun MkplContext.toAdGetResponse(): AdGetResponse =
+    AdGetResponse(
+        result = state.toResult(),
+        errors = errors.toTransportErrors(),
+        timestamp = Clock.System.now().toString(),
+        ad = this.adResponse.toAdData()
+    )
+fun MkplContext.toAdUpdateResponse(): AdUpdateResponse =
+    AdUpdateResponse(
+        result = state.toResult(),
+        errors = errors.toTransportErrors(),
+        timestamp = Clock.System.now().toString(),
+        ad = this.adResponse.toAdData(),
+        previousVersion = null
+    )
+fun MkplContext.toAdDeleteResponse(): AdDeleteResponse =
+    AdDeleteResponse(
+        result = state.toResult(),
+        errors = errors.toTransportErrors(),
+        timestamp = Clock.System.now().toString(),
+        deletedAdId = this.adResponse.id.toTransportAd(),
+        deletionTime = Clock.System.now().toString(),
+    )
+fun MkplContext.toAdSearchResponse(): AdSearchResponse =
+    AdSearchResponse(
+        result = state.toResult(),
+        errors = errors.toTransportErrors(),
+        timestamp = Clock.System.now().toString(),
+        ads = this.adsResponse.map { it.toAdData() },
+        total = this.adsResponse.size,
+        page = this.adFilterRequest.pagination.page,
+        propertySize = this.adFilterRequest.pagination.size,
+        totalPages = calculateTotalPages(this.adsResponse.size, this.adFilterRequest.pagination.size),
+        hasNext = false,
+        hasPrevious = false,
+        searchId = null
+    )
+private fun calculateTotalPages(total: Int, size: Int): Int =
+    if (total == 0) 0 else (total + size - 1) / size
+
+
+private fun MkplAdvertisement.toAdData(): AdData = AdData(
+    id = this.id.toTransportAd(),
+    title = this.title,
+    description = this.description,
+    price = this.price.toDouble(),
+    carInfo = this.car.toCarInfo(),
+    status = this.status.toTransport(),
+    location = this.location,
+    contactPhone = this.contactPhone,
+    createdAt = this.createdAt.toString(),
+    updatedAt = this.updatedAt.toString(),
+    viewsCount = this.viewsCount,
+    favoriteCount = this.favoriteCount
+)
+private fun MkplCar.toCarInfo(): CarInfo = CarInfo(
+    brand = this.brand,
+    model = this.model,
+    year = this.year,
+    mileage = this.mileage,
+    color = this.color,
+    engineType = this.engine.type.toTransport(),
+    engineVolume = this.engine.volume,
+    horsePower = this.engine.horsePower,
+    transmission = this.transmission.toTransport()
+)
+private fun MkplEngineType.toTransport():EngineType= when (this) {
+    MkplEngineType.HYBRID -> EngineType.HYBRID
+    MkplEngineType.DIESEL -> EngineType.DIESEL
+    MkplEngineType.ELECTRIC -> EngineType.ELECTRIC
+    MkplEngineType.GASOLINE -> EngineType.GASOLINE
+}
+private fun MkplTransmission.toTransport():Transmission= when (this) {
+    MkplTransmission.ROBOT -> Transmission.ROBOT
+    MkplTransmission.MANUAL -> Transmission.MANUAL
+    MkplTransmission.VARIATOR -> Transmission.VARIATOR
+    MkplTransmission.AUTOMATIC -> Transmission.AUTOMATIC
+}
+internal fun McplAdvertisementStatus.toTransport(): AdStatus? = when (this) {
+    McplAdvertisementStatus.ACTIVE->  AdStatus.ACTIVE
+    McplAdvertisementStatus.DRAFT -> AdStatus.DRAFT
+    McplAdvertisementStatus.SOLD -> AdStatus.SOLD
+    McplAdvertisementStatus.ARCHIVED -> AdStatus.ARCHIVED
+    McplAdvertisementStatus.NONE -> null
 }
 
-internal fun MkplDealSide.toTransportAd(): DealSide? = when (this) {
-    MkplDealSide.DEMAND -> DealSide.DEMAND
-    MkplDealSide.SUPPLY -> DealSide.SUPPLY
-    MkplDealSide.NONE -> null
-}
-
+internal fun McplAdvertisementId.toTransportAd() = takeIf { it != McplAdvertisementId.NONE }?.asString()
 private fun List<MkplError>.toTransportErrors(): List<Error>? = this
     .map { it.toTransportAd() }
     .toList()

@@ -3,10 +3,10 @@ package com.github.watching1981.common.models
 import kotlin.jvm.JvmInline
 
 @JvmInline
-value class MkplAdId(private val id: String) {
+value class McplAdvertisementId(private val id: Long) {
     fun asString() = id
 
     companion object {
-        val NONE = MkplAdId("")
+        val NONE = McplAdvertisementId(0)
     }
 }

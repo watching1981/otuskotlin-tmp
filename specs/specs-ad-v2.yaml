@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
-  title: "Marketplace ${VERSION_APP}"
+  title: "Car Marketplace ${VERSION_APP}"
   description: This is a place where sellers and buyers meat each other
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
-  - url: http://localhost:8080/v2
+  - url: http://localhost:8080/v1
 tags:
   - name: ad
     description: Объявление (о покупке или продаже автомобилей)
@@ -26,48 +26,68 @@ paths:
               $ref: '#/components/schemas/AdCreateRequest'
         required: true
       responses:
-        200:
-          description: Success
+        '200':
+          description: Advertisement created successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AdCreateResponse'
-  /ad/read:
+
+  /ad/get:
     post:
       tags:
         - ad
-      summary: Read ad
-      operationId: adRead
+      summary: Get ad by ID
+      operationId: getAdById
       requestBody:
-        description: Request body
+        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdReadRequest'
-        required: true
+              $ref: '#/components/schemas/AdGetRequest'
       responses:
-        200:
-          description: Success
+        '200':
+          description: Advertisement found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdReadResponse'
+                $ref: '#/components/schemas/AdGetResponse'
+
+  /ad/search:
+    post:
+      tags:
+        - ad
+      summary: Search ad with filters
+      operationId: searchAds
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdSearchRequest'
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdSearchResponse'
+
   /ad/update:
     post:
       tags:
         - ad
-      summary: Update ad
-      operationId: adUpdate
+      summary: Update advertisement
+      operationId: updateAd
       requestBody:
-        description: Request body
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/AdUpdateRequest'
-        required: true
       responses:
-        200:
-          description: Success
+        '200':
+          description: Advertisement updated
           content:
             application/json:
               schema:
@@ -76,66 +96,27 @@ paths:
     post:
       tags:
         - ad
-      summary: Delete ad
-      operationId: adDelete
+      summary: Delete advertisement
+      operationId: deleteAd
       requestBody:
-        description: Request body
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/AdDeleteRequest'
-        required: true
       responses:
-        200:
-          description: Success
+        '200':
+          description: Advertisement deleted
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AdDeleteResponse'
-  /ad/search:
-    post:
-      tags:
-        - ad
-      summary: Search ad
-      operationId: adSearch
-      requestBody:
-        description: Request body
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AdSearchRequest'
-        required: true
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AdSearchResponse'
-  /ad/offers:
-    post:
-      tags:
-        - ad
-      summary: Search offers
-      operationId: adOffers
-      requestBody:
-        description: Request body
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AdOffersRequest'
-        required: true
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AdOffersResponse'
+
+
 
 components:
   schemas:
-
+    # Request schemas
     IRequest:
       type: object
       description: Базовый интерфейс для всех запросов
@@ -148,315 +129,347 @@ components:
         propertyName: requestType
         mapping:
           create: '#/components/schemas/AdCreateRequest'
-          read:   '#/components/schemas/AdReadRequest'
+          get: '#/components/schemas/AdGetRequest'
           update: '#/components/schemas/AdUpdateRequest'
           delete: '#/components/schemas/AdDeleteRequest'
           search: '#/components/schemas/AdSearchRequest'
-          offers: '#/components/schemas/AdOffersRequest'
-
-    Error:
+      # Базовый response для всех ответов
+    BaseResponse:
       type: object
       properties:
-        code:
-          type: string
-        group:
-          type: string
-        field:
-          type: string
-        message:
-          type: string
-
-    ResponseResult:
-      type: string
-      enum:
-        - success
-        - error
-
-    IResponse:
-      type: object
-      description: Базовый интерфейс для всех ответов
-      properties:
-        responseType:
-          type: string
-          description: Поле-дескриминатор для вычисления типа запроса
-          example: create
         result:
           $ref: '#/components/schemas/ResponseResult'
         errors:
           type: array
           items:
             $ref: '#/components/schemas/Error'
-
-      discriminator:
-        propertyName: responseType
-        mapping:
-          create: '#/components/schemas/AdCreateResponse'
-          read:   '#/components/schemas/AdReadResponse'
-          update: '#/components/schemas/AdUpdateResponse'
-          delete: '#/components/schemas/AdDeleteResponse'
-          search: '#/components/schemas/AdSearchResponse'
-          offers: '#/components/schemas/AdOffersResponse'
-          init: '#/components/schemas/AdInitResponse'
-
-
-    UserId:
-      type: string
-      description: Идентификатор пользователя
-    AdId:
-      type: string
-      description: Идентификатор объявления
+        timestamp:
+          type: string
+          format: date-time
+          example: "2023-10-05T14:30:00Z"
     AdLock:
       type: string
       description: Версия оптимистичной блокировки
-    Location:
-      type: string
-      description: Местонахождение товара
-
-    BaseAd:
-      type: object
-      description: Объект описывает свойства, одинаковые для create и update
-      properties:
-        title:
-          type: string
-          description: Заголовок объявления
-        description:
-          type: string
-          description: Описание объявления
-        adType:
-          $ref: '#/components/schemas/DealSide'
-        status:
-          $ref: '#/components/schemas/AdStatus'
-        location:
-          $ref: '#/components/schemas/Location'
-
-    DealSide:
-      type: string
-      description: 'Сторона сделки: спрос или предложение'
-      enum:
-        - demand
-        - supply
-
-    AdStatus:
-      type: string
-      description: 'Статус объявления. Возможные значения: , Active видимо всем, Closed, Archived, Draft - видны только владельцам'
-      enum:
-        - Closed
-        - Archived
-        - Active
-        - Draft
-
-    AdInitResponse:
-      allOf:
-        - $ref: '#/components/schemas/IResponse'
-
-    AdCreateObject:
-      allOf:
-        - $ref: '#/components/schemas/BaseAd'
-
+    # Request schemas
     AdCreateRequest:
       allOf:
         - $ref: '#/components/schemas/IRequest'
-        - $ref: '#/components/schemas/AdRequestDebug'
         - type: object
+          required:
+            - title
+            - description
+            - price
+            - carInfo
           properties:
-            ad:
-              $ref: '#/components/schemas/AdCreateObject'
+            title:
+              type: string
+              minLength: 5
+              maxLength: 200
+              example: "Toyota Camry 2018 года"
+            description:
+              type: string
+              minLength: 10
+              maxLength: 2000
+              example: "Автомобиль в отличном состоянии"
+            price:
+              type: number
+              format: double
+              minimum: 0
+              example: 1500000.0
+            carInfo:
+              $ref: '#/components/schemas/CarInfo'
+            location:
+              type: string
+              example: "Москва"
+            contactPhone:
+              type: string
+              example: "+79991234567"
 
-    AdReadObject:
-      allOf:
-        - type: object
-          properties:
-            id:
-              $ref: '#/components/schemas/AdId'
-
-    AdReadRequest:
-      allOf:
-        - $ref: '#/components/schemas/IRequest'
-        - $ref: '#/components/schemas/AdRequestDebug'
-        - type: object
-          properties:
-            ad:
-              $ref: '#/components/schemas/AdReadObject'
-
-    AdUpdateObject:
-      allOf:
-        - $ref: '#/components/schemas/BaseAd'
-        - type: object
-          properties:
-            id:
-              $ref: '#/components/schemas/AdId'
-            lock:
-              $ref: '#/components/schemas/AdLock'
-
-    AdUpdateRequest:
-      allOf:
-        - $ref: '#/components/schemas/IRequest'
-        - $ref: '#/components/schemas/AdRequestDebug'
-        - type: object
-          properties:
-            ad:
-              $ref: '#/components/schemas/AdUpdateObject'
-
-    AdDeleteObject:
-      allOf:
-        - type: object
-          properties:
-            id:
-              $ref: '#/components/schemas/AdId'
-            lock:
-              $ref: '#/components/schemas/AdLock'
-
-    AdDeleteRequest:
+    AdGetRequest:
       allOf:
         - $ref: '#/components/schemas/IRequest'
-        - $ref: '#/components/schemas/AdRequestDebug'
         - type: object
+          required:
+            - id
           properties:
-            ad:
-              $ref: '#/components/schemas/AdDeleteObject'
-
-    AdSearchFilter:
-      type: object
-      description: Набор фильтров для поиска
-      properties:
-        searchString:
-          type: string
-          description: Поисковая строка, которая будет искаться в объявлениях
-        ownerId:
-          $ref: '#/components/schemas/UserId'
-        adType:
-          $ref: '#/components/schemas/DealSide'
+            id:
+              type: integer
+              format: int64
+              minimum: 1
+              example: 123
 
     AdSearchRequest:
       allOf:
         - $ref: '#/components/schemas/IRequest'
-        - $ref: '#/components/schemas/AdRequestDebug'
         - type: object
           properties:
-            adFilter:
-              $ref: '#/components/schemas/AdSearchFilter'
+            brand:
+              type: string
+              example: "Toyota"
+            model:
+              type: string
+              example: "Camry"
+            minYear:
+              type: integer
+              minimum: 1990
+              maximum: 2025
+              example: 2015
+            maxYear:
+              type: integer
+              minimum: 1990
+              maximum: 2030
+              example: 2025
+            minPrice:
+              type: number
+              format: double
+              minimum: 0
+              example: 1000000.0
+            maxPrice:
+              type: number
+              format: double
+              minimum: 0
+              example: 2000000.0
+            page:
+              type: integer
+              example: 0
+            size:
+              type: integer
+              example: 20
+            location:
+              type: string
+              example: "Москва"
 
-    AdOffersObject:
-      $ref: '#/components/schemas/AdReadObject'
-
-    AdOffersRequest:
+    AdUpdateRequest:
       allOf:
         - $ref: '#/components/schemas/IRequest'
-        - $ref: '#/components/schemas/AdRequestDebug'
         - type: object
-          properties:
-            ad:
-              $ref: '#/components/schemas/AdOffersObject'
-
-    AdResponseObject:
-      allOf:
-        - $ref: '#/components/schemas/BaseAd'
-        - type: object
-          description: Объект, который возвращается в ответе бэкенда
+          required:
+            - id
           properties:
             id:
-              $ref: '#/components/schemas/AdId'
-            ownerId:
-              $ref: '#/components/schemas/UserId'
+              type: integer
+              format: int64
             lock:
               $ref: '#/components/schemas/AdLock'
-            permissions:
-              type: array
-              uniqueItems: true
-              items:
-                $ref: '#/components/schemas/AdPermissions'
+            title:
+              type: string
+              minLength: 5
+              maxLength: 200
+            description:
+              type: string
+              minLength: 10
+              maxLength: 200
+            price:
+              type: number
+              format: double
+              minimum: 0
+            carInfo:
+              $ref: '#/components/schemas/CarInfo'
+            status:
+              $ref: '#/components/schemas/AdStatus'
+            location:
+              type: string
+              example: "Москва"
+            contactPhone:
+              type: string
+              example: "+79991234567"
 
-    AdPermissions:
-      type: string
-      description: Доступы для клиента для операций над объявлением
-      enum:
-        - read
-        - update
-        - delete
-        - makeVisiblePublic
-        - makeVisibleOwn
-        - makeVisibleGroup
-
-    AdResponseSingle:
+    AdDeleteRequest:
       allOf:
+        - $ref: '#/components/schemas/IRequest'
         - type: object
-          description: Ответ с одним объектом объявления
+          required:
+            - id
+          properties:
+            id:
+              type: integer
+              format: int64
+            lock:
+              $ref: '#/components/schemas/AdLock'
+
+    # Response schemas
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "VALIDATION_ERROR"
+        group:
+          type: string
+          example: "field_validation"
+        field:
+          type: string
+          example: "price"
+        message:
+          type: string
+          example: "Price must be positive"
+    ResponseResult:
+      type: string
+      enum:
+        - success
+        - error
+
+    AdStatus:
+      type: string
+      enum: [ DRAFT, ACTIVE, SOLD, ARCHIVED ]
+      example: "ACTIVE"
+    # Специфичные ответы для каждой операции
+    AdCreateResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
           properties:
             ad:
-              $ref: '#/components/schemas/AdResponseObject'
+              $ref: '#/components/schemas/AdData'
+            adId:
+              type: integer
+              format: int64
 
-    AdResponseMulti:
+    AdGetResponse:
       allOf:
+        - $ref: '#/components/schemas/BaseResponse'
         - type: object
-          description: Список найденных объектов
+          properties:
+            ad:
+              $ref: '#/components/schemas/AdData'
+
+    AdSearchResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
           properties:
             ads:
               type: array
               items:
-                $ref: '#/components/schemas/AdResponseObject'
-
-    AdCreateResponse:
-      allOf:
-        - $ref: '#/components/schemas/IResponse'
-        - $ref: '#/components/schemas/AdResponseSingle'
-
-    AdReadResponse:
-      allOf:
-        - $ref: '#/components/schemas/IResponse'
-        - $ref: '#/components/schemas/AdResponseSingle'
+                $ref: '#/components/schemas/AdData'
+            total:
+              type: integer
+              description: Общее количество найденных объявлений
+            page:
+              type: integer
+              description: Текущая страница
+            size:
+              type: integer
+              description: Размер страницы
+            totalPages:
+              type: integer
+              description: Общее количество страниц
+            hasNext:
+              type: boolean
+              description: Есть ли следующая страница
+            hasPrevious:
+              type: boolean
+              description: Есть ли предыдущая страница
+            searchId:
+              type: string
+              description: ID поискового запроса для кэширования
 
     AdUpdateResponse:
       allOf:
-        - $ref: '#/components/schemas/IResponse'
-        - $ref: '#/components/schemas/AdResponseSingle'
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            ad:
+              $ref: '#/components/schemas/AdData'
+            previousVersion:
+              $ref: '#/components/schemas/AdData'
 
     AdDeleteResponse:
       allOf:
-        - $ref: '#/components/schemas/IResponse'
-        - $ref: '#/components/schemas/AdResponseSingle'
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            deletedAdId:
+              type: integer
+              format: int64
+            deletionTime:
+              type: string
+              format: date-time
 
-    AdSearchResponse:
-      allOf:
-        - $ref: '#/components/schemas/IResponse'
-        - $ref: '#/components/schemas/AdResponseMulti'
-
-    AdOffersResponse:
-      allOf:
-        - $ref: '#/components/schemas/IResponse'
-        - $ref: '#/components/schemas/AdResponseSingle'
-        - $ref: '#/components/schemas/AdResponseMulti'
-
-    # STUBS ======================
-    AdRequestDebugMode:
-      type: string
-      enum:
-        - prod
-        - test
-        - stub
-
-    AdRequestDebug:
+    # Общие данные
+    AdData:
       type: object
       properties:
-        debug:
-          $ref: '#/components/schemas/AdDebug'
+        id:
+          type: integer
+          format: int64
+        lock:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+          format: double
+        carInfo:
+          $ref: '#/components/schemas/CarInfo'
+        status:
+          $ref: '#/components/schemas/AdStatus'
+        location:
+          type: string
+        contactPhone:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        viewsCount:
+          type: integer
+          description: Количество просмотров
+        favoriteCount:
+          type: integer
+          description: Количество добавлений в избранное
 
-    AdDebug:
-      type: object
-      properties:
-        mode:
-          $ref: '#/components/schemas/AdRequestDebugMode'
-        stub:
-          $ref: '#/components/schemas/AdRequestDebugStubs'
 
-    AdRequestDebugStubs:
+    # Common models
+    EngineType:
       type: string
-      description: Перечисления всех стабов
-      enum:
-        - success
-        - notFound
-        - badId
-        - badTitle
-        - badDescription
-        - badVisibility
-        - cannotDelete
-        - badSearchString
+      enum: [GASOLINE, DIESEL, ELECTRIC, HYBRID]
+      example: "GASOLINE"
+    Transmission:
+      type: string
+      enum: [MANUAL, AUTOMATIC, ROBOT, VARIATOR]
+      example: "MANUAL"
+    CarInfo:
+      type: object
+      required:
+        - brand
+        - model
+        - year
+      properties:
+        brand:
+          type: string
+          example: "Toyota"
+        model:
+          type: string
+          example: "Camry"
+        year:
+          type: integer
+          minimum: 1990
+          maximum: 2025
+          example: 2018
+        mileage:
+          type: integer
+          minimum: 0
+          example: 75000
+        color:
+          type: string
+          example: "Черный"
+        engineType:
+          $ref: '#/components/schemas/EngineType'
+        engineVolume:
+          type: number
+          format: double
+          minimum: 0.5
+          maximum: 8.0
+          example: 2.5
+        horsePower:
+          type: integer
+          format: int32
+          minimum: 50
+          example: 181
+        transmission:
+          $ref: '#/components/schemas/Transmission'
