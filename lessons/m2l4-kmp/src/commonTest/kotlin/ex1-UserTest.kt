@@ -1,4 +1,4 @@
-package ru.otus.otuskotlin.kmp
+package com.github.watching1981.kmp
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

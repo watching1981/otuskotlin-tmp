@@ -1,4 +1,4 @@
-package ru.otus.otuskotlin.kmp
+package com.github.watching1981.kmp
 
 //import org.junit.jupiter.api.Test
 import kotlin.test.Test
