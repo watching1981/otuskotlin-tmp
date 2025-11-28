@@ -137,6 +137,8 @@ components:
     BaseResponse:
       type: object
       properties:
+        responseType:
+          type: string
         result:
           $ref: '#/components/schemas/ResponseResult'
         errors:

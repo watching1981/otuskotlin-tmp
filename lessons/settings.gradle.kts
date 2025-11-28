@@ -1,9 +1,4 @@
-//pluginManagement {
-//    val kotlinVersion: String by settings
-//    plugins {
-//        kotlin("jvm") version kotlinVersion
-//    }
-//}
+
 pluginManagement {
     includeBuild("../build-plugin")
     plugins {
