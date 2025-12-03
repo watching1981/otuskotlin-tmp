@@ -1,4 +1,4 @@
-package com.github.watching1981.marketplace.app.kafka
+package com.github.watching1981.app.kafka
 
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.producer.KafkaProducer
@@ -13,7 +13,7 @@ import kotlin.test.Test
  * Для запуска этого теста, требуется поднять Кафку на порту 9092.
  * Поднять можно с помощью /deploy/docker-compose-kafka-cp.yml
  */
-@Ignore
+//@Ignore
 class SimpleKafkaTest {
     private val topicName = "producer-topic"
 
