@@ -1,4 +1,4 @@
-package ru.otus.otuskotlin.marketplace.app.common
+package com.github.watching1981.app.common
 
 import kotlinx.coroutines.test.runTest
 import com.github.watching1981.api.v2.mappers.fromTransport
