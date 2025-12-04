@@ -26,7 +26,7 @@ class AppKafkaConfig(
         const val KAFKA_TOPIC_OUT_V2_VAR = "KAFKA_TOPIC_OUT_V2"
         const val KAFKA_GROUP_ID_VAR = "KAFKA_GROUP_ID"
 
-//        val KAFKA_HOSTS by lazy { (System.getenv(KAFKA_HOST_VAR) ?: "").split("\\s*[,; ]\\s*") }
+        //val KAFKA_HOSTS by lazy { (System.getenv(KAFKA_HOST_VAR) ?: "").split("\\s*[,; ]\\s*") }
         val KAFKA_HOSTS by lazy {
             val envValue = System.getenv(KAFKA_HOST_VAR)
             if (envValue.isNullOrEmpty()) {
