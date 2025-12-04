@@ -1,0 +1,184 @@
+openapi: 3.0.4
+info:
+  title: Car Marketplace Log Models
+  description: Log models for logging services of car marketplace
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+
+paths: {}
+
+components:
+  schemas:
+    CommonLogModel:
+      title: Общая модель лога
+      description: Общая модель лога для всех микросервисов системы
+      type: object
+      properties:
+        messageTime:
+          type: string
+          format: date-time
+          description: Время создания лога
+          example: "2023-10-05T14:30:00Z"
+        logId:
+          type: string
+          description: Уникальный идентификатор лога
+          example: "log-1234567890"
+        source:
+          type: string
+          description: Источник лога (микросервис)
+          example: "car-marketplace-service"
+        level:
+          $ref: '#/components/schemas/LogLevel'
+        ad:
+          $ref: '#/components/schemas/MkplAdLogModel'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorLogModel'
+        durationMs:
+          type: integer
+          description: Длительность операции в миллисекундах
+          example: 150
+
+    MkplAdLogModel:
+      title: Модель лога для микросервиса Marketplace
+      type: object
+      properties:
+        requestId:
+          type: string
+          description: ID запроса для трассировки
+          example: "req-1234567890"
+        operation:
+          $ref: '#/components/schemas/MkplLogOperation'
+        userId:
+          type: integer
+          format: int64
+          description: ID пользователя
+          example: 123
+        requestAd:
+          $ref: '#/components/schemas/AdLog'
+        requestFilter:
+          $ref: '#/components/schemas/AdFilterLog'
+        responseAd:
+          $ref: '#/components/schemas/AdLog'
+        responseAds:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdLog'
+        responseTotal:
+          type: integer
+          description: Общее количество найденных объявлений
+          example: 150
+
+    MkplLogOperation:
+      type: string
+      enum:
+        - CREATE
+        - READ
+        - UPDATE
+        - DELETE
+        - SEARCH
+      description: Операция над объявлением
+      example: "CREATE"
+
+    LogLevel:
+      type: string
+      enum:
+        - DEBUG
+        - INFO
+        - WARN
+        - ERROR
+      description: Уровень логирования
+      example: "INFO"
+
+    ErrorLogModel:
+      title: Модель лога для ошибки
+      type: object
+      properties:
+        message:
+          type: string
+          description: Текст ошибки
+          example: "Validation failed for field 'price'"
+        field:
+          type: string
+          description: Поле, в котором произошла ошибка
+          example: "price"
+        code:
+          type: string
+          description: Код ошибки
+          example: "VALIDATION_ERROR"
+
+    AdLog:
+      title: Модель лога для объявления
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID объявления
+          example: 123
+        title:
+          type: string
+          description: Заголовок объявления
+          example: "Toyota Camry 2020"
+        status:
+          $ref: '#/components/schemas/AdStatus'
+        price:
+          type: number
+          format: double
+          description: Цена автомобиля
+          example: 1500000.0
+        ownerId:
+          type: integer
+          format: int64
+          description: ID владельца объявления
+          example: 123
+        carBrand:
+          type: string
+          example: "Toyota"
+        carModel:
+          type: string
+          example: "Camry"
+
+    AdStatus:
+      type: string
+      enum:
+        - DRAFT
+        - ACTIVE
+        - SOLD
+        - ARCHIVED
+      description: Статус объявления
+      example: "ACTIVE"
+
+    AdFilterLog:
+      title: Модель лога фильтра
+      type: object
+      properties:
+        brand:
+          type: string
+          example: "Toyota"
+        model:
+          type: string
+          example: "Camry"
+        minYear:
+          type: integer
+          example: 2018
+        maxYear:
+          type: integer
+          example: 2022
+        minPrice:
+          type: number
+          format: double
+          example: 1000000.0
+        maxPrice:
+          type: number
+          format: double
+          example: 2000000.0
+        page:
+          type: integer
+          example: 0
+        size:
+          type: integer
+          example: 20

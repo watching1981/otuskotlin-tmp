@@ -21,6 +21,7 @@ private fun Long?.toAdId() = this?.let { McplAdvertisementId(it) } ?: McplAdvert
 fun MkplContext.toAdCreateResponse(): AdCreateResponse =
     AdCreateResponse(
         result = state.toResult(),
+        responseType = "create",
         errors = errors.toTransportErrors(),
         timestamp = Clock.System.now().toString(),
         ad = this.adResponse.toAdData(),
@@ -28,6 +29,7 @@ fun MkplContext.toAdCreateResponse(): AdCreateResponse =
     )
 fun MkplContext.toAdGetResponse(): AdGetResponse =
     AdGetResponse(
+        responseType = "get",
         result = state.toResult(),
         errors = errors.toTransportErrors(),
         timestamp = Clock.System.now().toString(),
@@ -36,6 +38,7 @@ fun MkplContext.toAdGetResponse(): AdGetResponse =
 fun MkplContext.toAdUpdateResponse(): AdUpdateResponse =
     AdUpdateResponse(
         result = state.toResult(),
+        responseType = "update",
         errors = errors.toTransportErrors(),
         timestamp = Clock.System.now().toString(),
         ad = this.adResponse.toAdData(),
@@ -44,6 +47,7 @@ fun MkplContext.toAdUpdateResponse(): AdUpdateResponse =
 fun MkplContext.toAdDeleteResponse(): AdDeleteResponse =
     AdDeleteResponse(
         result = state.toResult(),
+        responseType = "delete",
         errors = errors.toTransportErrors(),
         timestamp = Clock.System.now().toString(),
         deletedAdId = this.adResponse.id.toTransportAd(),
@@ -52,6 +56,7 @@ fun MkplContext.toAdDeleteResponse(): AdDeleteResponse =
 fun MkplContext.toAdSearchResponse(): AdSearchResponse =
     AdSearchResponse(
         result = state.toResult(),
+        responseType = "search",
         errors = errors.toTransportErrors(),
         timestamp = Clock.System.now().toString(),
         ads = this.adsResponse.map { it.toAdData() },

@@ -1,0 +1,10 @@
+package com.github.watching1981.app.spring.config
+
+import com.github.watching1981.app.common.IMkplAppSettings
+import com.github.watching1981.car.biz.MkplAdProcessor
+import com.github.watching1981.common.MkplCorSettings
+
+data class MkplAppSettings(
+    override val corSettings: MkplCorSettings,
+    override val processor: MkplAdProcessor,
+): IMkplAppSettings

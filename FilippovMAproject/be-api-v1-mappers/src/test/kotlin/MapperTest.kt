@@ -2,9 +2,8 @@ import org.junit.Test
 import com.github.watching1981.api.v1.models.*
 import com.github.watching1981.common.*
 import com.github.watching1981.common.models.*
-import com.github.watching1981.mappers.v1.fromTransport
+import com.github.watching1981.mappers.v1.fromTransportCreate
 import kotlin.test.assertEquals
-import com.github.watching1981.mappers.v1.toAdCreateResponse
 import com.github.watching1981.mappers.v1.toTransportAd
 
 
@@ -34,7 +33,7 @@ class MapperTest {
         )
 
         val context = MkplContext()
-        context.fromTransport(request)
+        context.fromTransportCreate(request)
         assertEquals(MkplCommand.CREATE, context.command)
         assertEquals("Test Car", context.adRequest.title)
         assertEquals("Test Description", context.adRequest.description)
