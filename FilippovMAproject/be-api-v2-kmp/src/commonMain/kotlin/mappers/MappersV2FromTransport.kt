@@ -19,7 +19,7 @@ fun MkplContext.fromTransport(request: IRequest) = when (request) {
     is AdUpdateRequest -> fromTransport(request)
     is AdDeleteRequest -> fromTransport(request)
     is AdSearchRequest -> fromTransport(request)
-
+    else -> throw IllegalArgumentException("Unknown request type: ${request::class}")
 }
 
 private fun Long?.toAdId() = this?.let { McplAdvertisementId(it) } ?: McplAdvertisementId.NONE

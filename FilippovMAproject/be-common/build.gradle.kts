@@ -12,6 +12,7 @@ kotlin {
                 api("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
                 implementation(libs.kotlinx.serialization.core)
                 implementation(libs.kotlinx.serialization.json)
+                api("com.github.watching1981.car:car-lib-logging-common")
             }
         }
         commonTest {

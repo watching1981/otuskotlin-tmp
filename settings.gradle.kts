@@ -12,4 +12,4 @@ rootProject.name = "otuskotlin-tmp"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 includeBuild("lessons")
 includeBuild("FilippovMAproject")
-
+includeBuild("car-libs")

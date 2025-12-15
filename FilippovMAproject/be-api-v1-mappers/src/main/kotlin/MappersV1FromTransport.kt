@@ -9,11 +9,11 @@ import com.github.watching1981.mappers.v1.exceptions.UnknownRequestClass
 import kotlinx.datetime.Clock
 
 fun MkplContext.fromTransport(request: IRequest) = when (request) {
-    is AdCreateRequest -> fromTransport(request)
-    is AdGetRequest -> fromTransport(request)
-    is AdUpdateRequest -> fromTransport(request)
-    is AdDeleteRequest -> fromTransport(request)
-    is AdSearchRequest -> fromTransport(request)
+    is AdCreateRequest -> fromTransportCreate(request)
+    is AdGetRequest -> fromTransportGet(request)
+    is AdUpdateRequest -> fromTransportUpdate(request)
+    is AdDeleteRequest -> fromTransportDelete(request)
+    is AdSearchRequest -> fromTransportSearch(request)
     else -> throw UnknownRequestClass(request.javaClass)
 }
 
@@ -21,7 +21,7 @@ private fun Long?.toAdId() = this?.let { McplAdvertisementId(it) } ?: McplAdvert
 private fun String?.toAdLock() = this?.let { MkplAdLock(it) } ?: MkplAdLock.NONE
 
 
-fun MkplContext.fromTransport(request: AdGetRequest) {
+fun MkplContext.fromTransportGet(request: AdGetRequest) {
     command = MkplCommand.GET
     adRequest = request.toBusiness()
 }
@@ -34,7 +34,7 @@ private fun AdGetRequest?.toBusiness(): MkplAdvertisement = if (this != null) {
 
 
 
-fun MkplContext.fromTransport(request: AdCreateRequest) {
+fun MkplContext.fromTransportCreate(request: AdCreateRequest) {
     command = MkplCommand.CREATE
     adRequest = request.toBusiness()
 }
@@ -78,7 +78,7 @@ private fun AdCreateRequest.toBusiness(): MkplAdvertisement = MkplAdvertisement(
 )
 
 
-fun MkplContext.fromTransport(request: AdUpdateRequest) {
+fun MkplContext.fromTransportUpdate(request: AdUpdateRequest) {
     command = MkplCommand.UPDATE
     adRequest = request.toBusiness()
 }
@@ -93,7 +93,7 @@ fun AdUpdateRequest.toBusiness(): MkplAdvertisement = MkplAdvertisement(
     lock = lock.toAdLock(),
 )
 
-fun MkplContext.fromTransport(request: AdDeleteRequest) {
+fun MkplContext.fromTransportDelete(request: AdDeleteRequest) {
     command = MkplCommand.DELETE
     adRequest = request.toBusiness()
 }
@@ -107,7 +107,7 @@ private fun AdDeleteRequest.toBusiness(): MkplAdvertisement = if (this != null) 
     MkplAdvertisement()
 }
 
-fun MkplContext.fromTransport(request: AdSearchRequest) {
+fun MkplContext.fromTransportSearch(request: AdSearchRequest) {
     command = MkplCommand.SEARCH
     adFilterRequest = request.toBusiness()
 
