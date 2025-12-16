@@ -117,7 +117,7 @@ internal fun McplAdvertisementStatus.toTransport(): AdStatus? = when (this) {
     McplAdvertisementStatus.NONE -> null
 }
 
-internal fun McplAdvertisementId.toTransportAd() = takeIf { it != McplAdvertisementId.NONE }?.asString()
+internal fun McplAdvertisementId.toTransportAd() = takeIf { it != McplAdvertisementId.NONE }?.asLong()
 private fun List<MkplError>.toTransportErrors(): List<Error>? = this
     .map { it.toTransportAd() }
     .toList()

@@ -6,6 +6,7 @@ import com.github.watching1981.common.MkplCorSettings
 import com.github.watching1981.car.logging.common.MpLoggerProvider
 import com.github.watching1981.logging.jvm.mpLoggerLogback
 
+
 class AppKafkaConfig(
     val kafkaHosts: List<String> = KAFKA_HOSTS,
     val kafkaGroupId: String = KAFKA_GROUP_ID,

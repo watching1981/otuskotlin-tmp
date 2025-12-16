@@ -1,8 +1,8 @@
 package com.github.watching1981.common.models
 
 data class MkplAdvertisementFilters(
-    val brand: String? = null,
-    val model: String? = null,
+    var brand: String? = null,
+    var model: String? = null,
     val minYear: Int? = null,
     val maxYear: Int? = null,
     val minPrice: Double? = null,
