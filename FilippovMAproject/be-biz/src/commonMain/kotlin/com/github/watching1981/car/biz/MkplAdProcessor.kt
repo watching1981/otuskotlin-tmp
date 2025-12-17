@@ -5,17 +5,15 @@ import com.github.watching1981.biz.general.stubs
 import com.github.watching1981.biz.stubs.*
 import com.github.watching1981.biz.validation.*
 import com.github.watching1981.common.MkplCorSettings
-import com.github.watching1981.stubs.MkplAdStub
 import com.github.watching1981.common.MkplContext
 import com.github.watching1981.common.models.*
 import com.github.watching1981.cor.rootChain
 import com.github.watching1981.cor.worker
-import kotlinx.datetime.Clock
 
 //@Suppress("unused", "RedundantSuspendModifier")
 class MkplAdProcessor(private val corSettings: MkplCorSettings = MkplCorSettings.NONE) {
   suspend fun exec(ctx: MkplContext) = businessChain.exec(ctx.also { it.corSettings = corSettings })
-    private val businessChain = rootChain<MkplContext> {
+      private val businessChain = rootChain<MkplContext> {
         initStatus("Инициализация статуса")
 
         operation("Создание объявления", MkplCommand.CREATE) {
@@ -30,17 +28,21 @@ class MkplAdProcessor(private val corSettings: MkplCorSettings = MkplCorSettings
                 worker("Копируем поля в adValidating") { adValidating = adRequest.copy() }
                 worker("Очистка заголовка") { adValidating.title = adValidating.title.trim() }
                 worker("Очистка описания") { adValidating.description = adValidating.description.trim() }
+                worker("Очистка локации") {  adValidating.location = adValidating.location.trim() }
+                worker("Очистка телефона") { adValidating.contactPhone = adValidating.contactPhone.trim() }
                 validateTitleNotEmpty("Проверка, что заголовок не пуст")
-                validateTitleHasContent("Проверка символов")
+                validateTitleHasContent("Проверка символов в заголовке")
                 validateDescriptionNotEmpty("Проверка, что описание не пусто")
-                validateDescriptionHasContent("Проверка символов")
+                validateDescriptionHasContent("Проверка символов в описании")
+                validatePriceNotEmpty("Проверка, что цена указана и положительна")
+                validatePriceRange("Проверка диапазона цены", min = 0.0, max = 1_000_000_000.0)
 
                 finishAdValidation("Завершение проверок")
             }
         }
         operation("Получить объявление", MkplCommand.GET) {
             stubs("Обработка стабов") {
-                stubReadSuccess("Имитация успешной обработки", corSettings)
+                stubGetSuccess("Имитация успешной обработки", corSettings)
                 stubValidationBadId("Имитация ошибки валидации id")
                 stubDbError("Имитация ошибки работы с БД")
                 stubNoCase("Ошибка: запрошенный стаб недопустим")
@@ -75,6 +77,9 @@ class MkplAdProcessor(private val corSettings: MkplCorSettings = MkplCorSettings
                 validateTitleHasContent("Проверка на наличие содержания в заголовке")
                 validateDescriptionNotEmpty("Проверка на непустое описание")
                 validateDescriptionHasContent("Проверка на наличие содержания в описании")
+                validatePriceNotEmpty("Проверка, что цена указана и положительна")
+                validatePriceRange("Проверка диапазона цены", min = 0.0, max = 1_000_000_000.0)
+
 
                 finishAdValidation("Успешное завершение процедуры валидации")
             }
@@ -108,7 +113,11 @@ class MkplAdProcessor(private val corSettings: MkplCorSettings = MkplCorSettings
             }
             validation {
                 worker("Копируем поля в adFilterValidating") { adFilterValidating = adFilterRequest.copy() }
+                worker("Очистка названия брэнда") { adFilterValidating.filters.brand = adFilterValidating.filters.brand?.trim() }
+                worker("Очистка названия модели") { adFilterValidating.filters.model = adFilterValidating.filters.model?.trim() }
                 validateBrandLength("Валидация брэнда в строке поиска в фильтре")
+                validateYearRange("Валидация диапазона года выпуска")
+                validatePriceRange("Проверка диапазона цены", min = 0.0, max = 1_000_000_000.0)
 
                 finishAdFilterValidation("Успешное завершение процедуры валидации")
             }

@@ -15,6 +15,7 @@ class AdCreateStubTest {
     val id = McplAdvertisementId.NONE
     val title = "title Car1"
     val description = "desc Car1"
+    val location = "Tyumen"
 
 
     @Test
@@ -29,12 +30,15 @@ class AdCreateStubTest {
                 id = id,
                 title = title,
                 description = description,
+                location = location,
             ),
         )
         processor.exec(ctx)
         assertEquals(MkplAdStub.get().id, ctx.adResponse.id)
         assertEquals(title, ctx.adResponse.title)
         assertEquals(description, ctx.adResponse.description)
+        assertEquals(location, ctx.adResponse.location)
+
     }
 
     @Test

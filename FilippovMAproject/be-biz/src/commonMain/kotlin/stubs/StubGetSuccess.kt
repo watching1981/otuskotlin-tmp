@@ -7,9 +7,10 @@ import com.github.watching1981.common.MkplCorSettings
 import com.github.watching1981.common.models.MkplState
 import com.github.watching1981.common.stubs.MkplStubs
 import com.github.watching1981.car.logging.common.LogLevel
+import com.github.watching1981.common.models.McplAdvertisementId
 import com.github.watching1981.stubs.MkplAdStub
 
-fun ICorChainDsl<MkplContext>.stubReadSuccess(title: String, corSettings: MkplCorSettings) = worker {
+fun ICorChainDsl<MkplContext>.stubGetSuccess(title: String, corSettings: MkplCorSettings) = worker {
     this.title = title
     this.description = """
         Кейс успеха для чтения объявления
@@ -21,6 +22,10 @@ fun ICorChainDsl<MkplContext>.stubReadSuccess(title: String, corSettings: MkplCo
             state = MkplState.FINISHING
             val stub = MkplAdStub.prepareResult {
                 adRequest.title.takeIf { it.isNotBlank() }?.also { this.title = it }
+                adRequest.id.takeIf { it != McplAdvertisementId.NONE }?.let {
+                    this.id = it
+                }
+
             }
             adResponse = stub
         }

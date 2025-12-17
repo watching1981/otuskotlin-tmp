@@ -12,8 +12,10 @@ class AdUpdateStubTest {
 
     private val processor = MkplAdProcessor()
     val id:McplAdvertisementId = McplAdvertisementId(1)
-    val title = "title 666"
-    val description = "desc 666"
+    val title = "title Car"
+    val description = "desc Car"
+    val price = 100000.0
+    val carBrand = MkplCar( "Toyota", model = "Camry")
 
 
     @Test
@@ -28,12 +30,17 @@ class AdUpdateStubTest {
                 id = id,
                 title = title,
                 description = description,
+                price = price,
+                car = carBrand
             ),
         )
         processor.exec(ctx)
         assertEquals(id, ctx.adResponse.id)
         assertEquals(title, ctx.adResponse.title)
         assertEquals(description, ctx.adResponse.description)
+        assertEquals(price, ctx.adResponse.price)
+        assertEquals(carBrand.brand, ctx.adResponse.car.brand)
+        assertEquals(carBrand.model, ctx.adResponse.car.model)
     }
 
     @Test

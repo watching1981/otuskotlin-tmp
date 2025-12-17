@@ -17,11 +17,11 @@ class BizValidationSearchTest: BaseBizValidationTest() {
             state = MkplState.NONE,
             workMode = MkplWorkMode.TEST,
             adFilterRequest = MkplAdvertisementSearch(MkplAdvertisementFilters(brand = "BYD"),MkplPagination(),MkplSortOptions()),
-
-
         )
         processor.exec(ctx)
         assertEquals(0, ctx.errors.size)
         assertNotEquals(MkplState.FAILING, ctx.state)
     }
+    @Test fun correctPagination() = validationYearRangeCorrect(command, processor)
+    @Test fun  badPagination() = validationYearBadRange(command, processor)
 }

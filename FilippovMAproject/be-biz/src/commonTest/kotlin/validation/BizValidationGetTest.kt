@@ -8,6 +8,6 @@ class BizValidationGetTest: BaseBizValidationTest() {
 
     @Test fun correctId() = validationIdCorrect(command, processor)
     @Test fun emptyId() = validationPositive(command, processor)
-    @Test fun badFormatId() = validationRange(command, processor)
+    @Test fun badFormatId() = validationIdRange(command, processor)
 
 }

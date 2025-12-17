@@ -9,7 +9,7 @@ import com.github.watching1981.stubs.MkplAdStub
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class AdReadStubTest {
+class AdGetStubTest {
 
     private val processor = MkplAdProcessor()
     val id = McplAdvertisementId.NONE
@@ -31,6 +31,7 @@ class AdReadStubTest {
             assertEquals(id, ctx.adResponse.id)
             assertEquals(title, ctx.adResponse.title)
             assertEquals(description, ctx.adResponse.description)
+            assertEquals(price, ctx.adResponse.price)
         }
     }
 

@@ -32,6 +32,7 @@ class AdDeleteStubTest {
         assertEquals(stub.id, ctx.adResponse.id)
         assertEquals(stub.title, ctx.adResponse.title)
         assertEquals(stub.description, ctx.adResponse.description)
+        assertEquals(stub.price, ctx.adResponse.price)
     }
 
     @Test

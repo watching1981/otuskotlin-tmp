@@ -8,6 +8,7 @@ import com.github.watching1981.common.models.MkplState
 import com.github.watching1981.common.stubs.MkplStubs
 import com.github.watching1981.car.logging.common.LogLevel
 import com.github.watching1981.stubs.MkplAdStub
+import kotlinx.datetime.Clock
 
 fun ICorChainDsl<MkplContext>.stubDeleteSuccess(title: String, corSettings: MkplCorSettings) = worker {
     this.title = title
@@ -21,6 +22,10 @@ fun ICorChainDsl<MkplContext>.stubDeleteSuccess(title: String, corSettings: Mkpl
             state = MkplState.FINISHING
             val stub = MkplAdStub.prepareResult {
                 adRequest.title.takeIf { it.isNotBlank() }?.also { this.title = it }
+                // Сохраняем ID удаленного объявления
+                deletedAdId = adRequest.id
+                // Устанавливаем время удаления
+                deletionTime = Clock.System.now()
             }
             adResponse = stub
         }

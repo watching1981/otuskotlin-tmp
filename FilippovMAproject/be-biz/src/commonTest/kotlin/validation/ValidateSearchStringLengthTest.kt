@@ -13,10 +13,10 @@ class ValidateSearchStringLengthTest {
     @Test
     fun emptyString() = runTest {
         val ctx = MkplContext(state = MkplState.RUNNING, adFilterValidating = MkplAdvertisementSearch(
-            MkplAdvertisementFilters(brand = ""),
-            MkplPagination(),
-            MkplSortOptions()
-        )
+                MkplAdvertisementFilters(brand = ""),
+                MkplPagination(),
+                MkplSortOptions()
+            )
         )
 
         chain.exec(ctx)
@@ -55,7 +55,8 @@ class ValidateSearchStringLengthTest {
         chain.exec(ctx)
         assertEquals(MkplState.FAILING, ctx.state)
         assertEquals(1, ctx.errors.size)
-        assertEquals("validation-brand-too-long", ctx.errors.first().code)
+        assertEquals("validation-bra" +
+                "nd-too-long", ctx.errors.first().code)
     }
 
     companion object {

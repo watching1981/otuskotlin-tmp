@@ -20,6 +20,8 @@ data class MkplContext(
     var timeStart: Instant = Instant.NONE,
     var adRequest: MkplAdvertisement = MkplAdvertisement(),
     var adFilterRequest: MkplAdvertisementSearch = MkplAdvertisementSearch(MkplAdvertisementFilters.NONE,MkplPagination(),MkplSortOptions()),
+    var deletedAdId: McplAdvertisementId = McplAdvertisementId.NONE,
+    var deletionTime: Instant? = null,
 
     var adValidating: MkplAdvertisement = MkplAdvertisement(),
     var adFilterValidating: MkplAdvertisementSearch = MkplAdvertisementSearch(MkplAdvertisementFilters.NONE,MkplPagination(),MkplSortOptions()),

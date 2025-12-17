@@ -22,7 +22,7 @@ class BizValidationUpdateTest: BaseBizValidationTest() {
 
     @Test fun correctId() = validationIdCorrect(command, processor)
     @Test fun emptyId() = validationPositive(command, processor)
-    @Test fun badFormatId() = validationRange(command, processor)
+    @Test fun badFormatId() = validationIdRange(command, processor)
 
     @Test fun correctLock() = validationLockCorrect(command, processor)
     @Test fun trimLock() = validationLockTrim(command, processor)

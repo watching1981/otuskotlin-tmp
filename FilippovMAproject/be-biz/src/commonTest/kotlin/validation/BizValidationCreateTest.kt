@@ -16,4 +16,7 @@ class BizValidationCreateTest: BaseBizValidationTest() {
     @Test fun trimDescription() = validationDescriptionTrim(command, processor)
     @Test fun emptyDescription() = validationDescriptionEmpty(command, processor)
     @Test fun badSymbolsDescription() = validationDescriptionSymbols(command, processor)
+    @Test fun correctPriceRange() = validationPriceCorrect(command, processor)
+    @Test fun badPriceRange() = priceRange(command, processor)
+
 }
