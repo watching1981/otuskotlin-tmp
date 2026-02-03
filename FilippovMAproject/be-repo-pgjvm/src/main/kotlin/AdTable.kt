@@ -38,7 +38,7 @@ class AdTable(tableName: String) : Table(tableName) {
         title = res[title] ?: "",
         description = res[description] ?: "",
         price = res[price].toDouble(),
-        car = MkplCar(brand = res[brand], model = res[model], year =res[year].toInt(), mileage = res[mileage].toInt(), engine = MkplEngine(type = res[engine_type],volume = 2.0, horsePower =100 ),transmission = res[transmission] ),
+        car = MkplCar(brand = res[brand], model = res[model], year =res[year].toInt(), mileage = res[mileage].toInt(), engine = MkplEngine(type = res[engine_type],volume = 0.0, horsePower =0 ),transmission = res[transmission] ),
         status = McplAdvertisementStatus.valueOf(res[status]),
         authorId = MkplUserId(res[author_id]),
         lock = MkplAdLock(res[lock]),
