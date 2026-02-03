@@ -10,9 +10,12 @@ dependencies {
     implementation(libs.spring.actuator)
     implementation(libs.spring.webflux)
     implementation(libs.spring.webflux.ui)
+    implementation(libs.spring.mockk)
     implementation(libs.jackson.kotlin)
     implementation(kotlin("reflect"))
     implementation(kotlin("stdlib"))
+
+
 
     implementation(libs.coroutines.core)
     implementation(libs.coroutines.reactor)
@@ -35,10 +38,18 @@ dependencies {
     // biz
     implementation(project(":be-biz"))
 
+    // DB
+    implementation(projects.beRepoStubs)
+    implementation(projects.beRepoInmemory)
+    implementation(projects.beRepoPgjvm)
+    testImplementation(projects.beRepoCommon)
+    testImplementation(projects.beStubs)
+
     // tests
     testImplementation(kotlin("test-junit5"))
     testImplementation(libs.spring.test)
     testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.spring.mockk)
 }
 
 tasks {
@@ -59,4 +70,17 @@ tasks {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    environment("MKPLADS_DB", "test_db")
+}
+tasks.bootBuildImage {
+    builder = "paketobuildpacks/builder-jammy-base:latest"
+    environment.set(mapOf("BP_HEALTH_CHECKER_ENABLED" to "true"))
+    buildpacks.set(
+        listOf(
+            "docker.io/paketobuildpacks/adoptium",
+            "urn:cnb:builder:paketo-buildpacks/java",
+            "docker.io/paketobuildpacks/health-checker:latest"
+        )
+    )
+
 }

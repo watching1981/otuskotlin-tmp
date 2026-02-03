@@ -22,7 +22,7 @@ fun MkplContext.fromTransport(request: IRequest) = when (request) {
     else -> throw IllegalArgumentException("Unknown request type: ${request::class}")
 }
 
-private fun Long?.toAdId() = this?.let { McplAdvertisementId(it) } ?: McplAdvertisementId.NONE
+private fun Long?.toAdId() = this?.let { MkplAdvertisementId(it) } ?: MkplAdvertisementId.NONE
 private fun String?.toAdLock() = this?.let { MkplAdLock(it) } ?: MkplAdLock.NONE
 
 
@@ -70,7 +70,7 @@ fun Transmission.fromTransport():MkplTransmission=when(this) {
 }
 
 private fun AdCreateRequest.toBusiness(): MkplAdvertisement = MkplAdvertisement(
-    id = McplAdvertisementId.NONE,
+    id = MkplAdvertisementId.NONE,
     title = this.title,
     description = this.description,
     price = this.price,

@@ -7,10 +7,11 @@ object MkplAdStub {
 
     // Базовые заглушки для разных сценариев
     private val AD_ACTIVE_CAMRY = MkplAdvertisement(
-        id = McplAdvertisementId(1),
+        id = MkplAdvertisementId(1),
         title = "Toyota Camry 2020",
         description = "Автомобиль в отличном состоянии, один хозяин",
         price = 1500000.0,
+        lock = MkplAdLock("124-354"),
         car = MkplCar(
             brand = "Toyota",
             model = "Camry",
@@ -35,10 +36,11 @@ object MkplAdStub {
     )
 
     private val AD_DRAFT_BMW = MkplAdvertisement(
-        id = McplAdvertisementId(2),
+        id = MkplAdvertisementId(2),
         title = "BMW X5 2019",
         description = "Премиальный SUV с полным комплектом",
         price = 2500000.0,
+        lock = MkplAdLock("124-354"),
         car = MkplCar(
             brand = "BMW",
             model = "X5",
@@ -61,11 +63,38 @@ object MkplAdStub {
         viewsCount = 75,
         favoriteCount = 12
     )
+    private val AD_DRAFT_BMW2 = MkplAdvertisement(
+        id = MkplAdvertisementId(112),
+        title = "BMW X5 2022",
+        description = "Премиальный SUV с полным комплектом",
+        price = 2500000.0,
+        lock = MkplAdLock("124-354"),
+        car = MkplCar(
+            brand = "BMW",
+            model = "X5",
+            year = 2022,
+            mileage = 35000,
+            color = "Белый",
+            engine = MkplEngine(
+                type = MkplEngineType.DIESEL,
+                volume = 3.0,
+                horsePower = 265
+            ),
+            transmission = MkplTransmission.AUTOMATIC
+        ),
+        status = McplAdvertisementStatus.DRAFT,
+        location = "Санкт-Петербург",
+        contactPhone = "+79997654321",
+        authorId = MkplUserId(101),
+        viewsCount = 75,
+        favoriteCount = 12
+    )
 
 
 
 
     fun get(): MkplAdvertisement = AD_ACTIVE_CAMRY.copy()
+    fun take(): MkplAdvertisement = AD_DRAFT_BMW2.copy()
 
     fun getDraft(): MkplAdvertisement = AD_DRAFT_BMW.copy()
 
@@ -81,11 +110,20 @@ object MkplAdStub {
             createAd("toyota-1", "Toyota Corolla 2020", "Toyota", "Corolla", 2020, 40000, 1100000.0),
             createAd("bmw-1", "BMW 3 Series 2021", "BMW", "3 Series", 2021, 15000, 2800000.0),
         )
+//        // Применяем фильтры
+//        return baseList.filter { ad ->
+//            val brandMatch = brand?.let { b ->
+//                b.isNotBlank() && ad.car.brand.equals(b, ignoreCase = true)
+//            } ?: true
+//
+//            val statusMatch = status?.let { s ->
+//                ad.status == s
+//            } ?: true
+//
+//            brandMatch && statusMatch
+//        }
+        return baseList
 
-        return baseList.filter { ad ->
-            (brand == null || ad.car.brand.equals(brand, ignoreCase = true)) &&
-                    (status == null || ad.status == status)
-        }
     }
 
     fun prepareActiveAdsList(brand: String? = null): List<MkplAdvertisement> =
@@ -99,7 +137,7 @@ object MkplAdStub {
     // Подготовка списков по цене
     fun prepareAdsByPriceRange(minPrice: Double, maxPrice: Double): List<MkplAdvertisement> {
         return prepareSearchList().filter { ad ->
-            ad.price >= minPrice && ad.price <= maxPrice
+            ad.price!! >= minPrice && ad.price!! <= maxPrice
         }
     }
 
@@ -122,7 +160,7 @@ object MkplAdStub {
         status: McplAdvertisementStatus = McplAdvertisementStatus.ACTIVE,
         location: String = "Москва"
     ): MkplAdvertisement = AD_ACTIVE_CAMRY.copy(
-        id = McplAdvertisementId(id.toLong()),
+        id = MkplAdvertisementId(id.toLong()),
         title = title,
         description = "Описание для $title",
         price = price,
@@ -147,7 +185,7 @@ object MkplAdStub {
         mileage: Int,
         price: Double
     ): MkplAdvertisement = AD_ACTIVE_CAMRY.copy(
-        id = McplAdvertisementId(id.hashCode().toLong()),
+        id = MkplAdvertisementId(id.hashCode().toLong()),
         title = title,
         description = "Описание для $title",
         price = price,

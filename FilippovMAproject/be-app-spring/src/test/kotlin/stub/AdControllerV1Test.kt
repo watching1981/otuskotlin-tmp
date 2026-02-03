@@ -150,8 +150,8 @@ internal class AdControllerV1Test {
             else -> obj
         }
     }
-    private fun AdData.ignoreAdTimestamps(): AdData = this.copy(
-        createdAt = "IGNORED",
-        updatedAt = "IGNORED"
-    )
+//    private fun AdData.ignoreAdTimestamps(): AdData = this.copy(
+//        createdAt = "IGNORED",
+//        updatedAt = "IGNORED"
+//    )
 }

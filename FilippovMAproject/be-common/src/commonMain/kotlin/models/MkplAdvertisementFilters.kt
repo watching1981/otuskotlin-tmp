@@ -1,6 +1,8 @@
 package com.github.watching1981.common.models
 
 data class MkplAdvertisementFilters(
+//    var brand: String? = "Toyota",
+//    var model: String? = "Camry",
     var brand: String? = null,
     var model: String? = null,
     val minYear: Int? = null,
@@ -11,7 +13,7 @@ data class MkplAdvertisementFilters(
     val transmissions: Set<MkplTransmission> = emptySet(),
     val minMileage: Int? = null,
     val maxMileage: Int? = null,
-    val location: String? = null,
+    val location: String? = "Москва",
     val status: McplAdvertisementStatus? = McplAdvertisementStatus.ACTIVE
 ){
     companion object{

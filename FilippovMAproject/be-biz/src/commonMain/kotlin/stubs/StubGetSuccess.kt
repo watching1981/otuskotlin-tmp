@@ -7,7 +7,7 @@ import com.github.watching1981.common.MkplCorSettings
 import com.github.watching1981.common.models.MkplState
 import com.github.watching1981.common.stubs.MkplStubs
 import com.github.watching1981.car.logging.common.LogLevel
-import com.github.watching1981.common.models.McplAdvertisementId
+import com.github.watching1981.common.models.MkplAdvertisementId
 import com.github.watching1981.stubs.MkplAdStub
 
 fun ICorChainDsl<MkplContext>.stubGetSuccess(title: String, corSettings: MkplCorSettings) = worker {
@@ -22,7 +22,7 @@ fun ICorChainDsl<MkplContext>.stubGetSuccess(title: String, corSettings: MkplCor
             state = MkplState.FINISHING
             val stub = MkplAdStub.prepareResult {
                 adRequest.title.takeIf { it.isNotBlank() }?.also { this.title = it }
-                adRequest.id.takeIf { it != McplAdvertisementId.NONE }?.let {
+                adRequest.id.takeIf { it != MkplAdvertisementId.NONE }?.let {
                     this.id = it
                 }
 

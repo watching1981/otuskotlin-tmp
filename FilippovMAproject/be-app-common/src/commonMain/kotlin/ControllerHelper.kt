@@ -18,18 +18,23 @@ suspend inline fun <T> IMkplAppSettings.controllerHelper(
         timeStart = Clock.System.now(),
     )
     return try {
+        //getRequest это функция, которая приходит извне (из AdControllerV1Fine при вызове оттуда метода controllerHelper)
+        //в качестве первого параметра. По факту это метод fromTransport из AdControllerV1Fine. Он обогащает текущий контекст
         ctx.getRequest()
         logger.info(
             msg = "Request $logId started for ${clazz.simpleName}",
             marker = "BIZ",
             data = ctx.toLog(logId)
         )
-        processor.exec(ctx)
+        processor.exec(ctx)//выполняем с обогащенным контекстом основной метод цепочки обязаностей
         logger.info(
             msg = "Request $logId processed for ${clazz.simpleName}",
             marker = "BIZ",
             data = ctx.toLog(logId)
         )
+        //ctx.toResponse() которая приходит извне (из AdControllerV1Fine при вызове оттуда метода controllerHelper)
+        //в качестве второго параметра. По факту это метод toTransportAd() из AdControllerV1Fine.
+        // Он преобразует получившийся контекст в ответ
         ctx.toResponse()
     } catch (e: Throwable) {
         logger.error(

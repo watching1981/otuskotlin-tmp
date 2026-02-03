@@ -16,7 +16,7 @@ fun MkplContext.toTransportAd(): Any = when (this.command) {
 }
 
 
-private fun Long?.toAdId() = this?.let { McplAdvertisementId(it) } ?: McplAdvertisementId.NONE
+private fun Long?.toAdId() = this?.let { MkplAdvertisementId(it) } ?: MkplAdvertisementId.NONE
 
 fun MkplContext.toAdCreateResponse(): AdCreateResponse =
     AdCreateResponse(
@@ -68,6 +68,11 @@ fun MkplContext.toAdSearchResponse(): AdSearchResponse =
         hasPrevious = false,
         searchId = null
     )
+//функция для вставки заглушек вместо дат сщздания и обновления в объявлении для корректности тестов
+fun AdData.ignoreAdTimestamps(): AdData = this.copy(
+    createdAt = "IGNORED",
+    updatedAt = "IGNORED"
+)
 private fun calculateTotalPages(total: Int, size: Int): Int =
     if (total == 0) 0 else (total + size - 1) / size
 
@@ -86,7 +91,7 @@ private fun MkplAdvertisement.toAdData(): AdData = AdData(
     viewsCount = this.viewsCount,
     favoriteCount = this.favoriteCount
 )
-private fun MkplCar.toCarInfo(): CarInfo = CarInfo(
+internal fun MkplCar.toCarInfo(): CarInfo = CarInfo(
     brand = this.brand,
     model = this.model,
     year = this.year,
@@ -117,7 +122,7 @@ internal fun McplAdvertisementStatus.toTransport(): AdStatus? = when (this) {
     McplAdvertisementStatus.NONE -> null
 }
 
-internal fun McplAdvertisementId.toTransportAd() = takeIf { it != McplAdvertisementId.NONE }?.asLong()
+internal fun MkplAdvertisementId.toTransportAd() = takeIf { it != MkplAdvertisementId.NONE }?.asLong()
 private fun List<MkplError>.toTransportErrors(): List<Error>? = this
     .map { it.toTransportAd() }
     .toList()

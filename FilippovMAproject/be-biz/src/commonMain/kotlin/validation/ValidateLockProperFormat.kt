@@ -10,7 +10,7 @@ import com.github.watching1981.cor.worker
 fun ICorChainDsl<MkplContext>.validateLockProperFormat(title: String) = worker {
     this.title = title
 
-    // Может быть вынесен в MkplAdId для реализации различных форматов
+
     val regExp = Regex("^[0-9a-zA-Z-]+$")
     on { adValidating.lock != MkplAdLock.NONE && !adValidating.lock.asString().matches(regExp) }
     handle {

@@ -17,9 +17,14 @@ fun Throwable.asMkplError(
     exception = this,
 )
 inline fun MkplContext.addError(vararg error: MkplError) = errors.addAll(error)
+inline fun MkplContext.addErrors(error: Collection<MkplError>) = errors.addAll(error)
 
 inline fun MkplContext.fail(error: MkplError) {
     addError(error)
+    state = MkplState.FAILING
+}
+inline fun MkplContext.fail(errors: Collection<MkplError>) {
+    addErrors(errors)
     state = MkplState.FAILING
 }
 inline fun errorValidation(
@@ -38,3 +43,16 @@ inline fun errorValidation(
     message = "Validation error for field $field: $description",
     level = level,
 )
+
+inline fun errorSystem(
+    violationCode: String,
+    level: LogLevel = LogLevel.ERROR,
+    e: Throwable,
+) = MkplError(
+    code = "system-$violationCode",
+    group = "system",
+    message = "Произошла ошибка в системе. Мы уже работаем над устранением. Пожалуйста, повторите попытку позже",
+    level = level,
+    exception = e,
+)
+

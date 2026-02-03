@@ -77,10 +77,10 @@ private fun MkplError.toLog(): ErrorLogModel = ErrorLogModel(
 )
 
 private fun MkplAdvertisement.toLog(): AdLog = AdLog(
-    id = id.takeIf { it != McplAdvertisementId.NONE }?.asLong(),
+    id = id.takeIf { it != MkplAdvertisementId.NONE }?.asLong(),
     title = title.takeIf { it.isNotBlank() },
     status = status.toLogStatus(),
-    price = price.takeIf { it > 0.0 }?.toDouble(),
+    price = price.takeIf { it!! > 0.0 }?.toDouble(),
     ownerId = authorId.takeIf { it != MkplUserId.NONE }?.value,
     carBrand = car.brand.takeIf { it.isNotBlank() },
     carModel = car.model.takeIf { it.isNotBlank() }

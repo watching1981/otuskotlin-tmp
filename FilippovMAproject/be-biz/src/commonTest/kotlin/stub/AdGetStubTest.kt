@@ -12,7 +12,7 @@ import kotlin.test.assertEquals
 class AdGetStubTest {
 
     private val processor = MkplAdProcessor()
-    val id = McplAdvertisementId.NONE
+    val id = MkplAdvertisementId.NONE
 
     @Test
     fun read() = runTest {
@@ -45,7 +45,7 @@ class AdGetStubTest {
             adRequest = MkplAdvertisement(),
         )
         processor.exec(ctx)
-        assertEquals(McplAdvertisementId.NONE, ctx.adResponse.id)
+        assertEquals(MkplAdvertisementId.NONE, ctx.adResponse.id)
         assertEquals("", ctx.adResponse.title)
         assertEquals("", ctx.adResponse.description)
         assertEquals(0.0, ctx.adResponse.price)
@@ -66,7 +66,7 @@ class AdGetStubTest {
             ),
         )
         processor.exec(ctx)
-        assertEquals(McplAdvertisementId.NONE, ctx.adResponse.id)
+        assertEquals(MkplAdvertisementId.NONE, ctx.adResponse.id)
         assertEquals("", ctx.adResponse.title)
         assertEquals("", ctx.adResponse.description)
         assertEquals(0.0, ctx.adResponse.price)
@@ -86,7 +86,7 @@ class AdGetStubTest {
             ),
         )
         processor.exec(ctx)
-        assertEquals(McplAdvertisementId.NONE, ctx.adResponse.id)
+        assertEquals(MkplAdvertisementId.NONE, ctx.adResponse.id)
         assertEquals("", ctx.adResponse.title)
         assertEquals("", ctx.adResponse.description)
         assertEquals(0.0, ctx.adResponse.price)

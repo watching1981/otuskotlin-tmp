@@ -116,6 +116,18 @@ paths:
 
 components:
   schemas:
+    Stub:
+      type: string
+      enum: [NONE, SUCCESS, NOT_FOUND, BAD_ID, BAD_TITLE, BAD_DESCRIPTION, CANNOT_DELETE, BAD_SEARCH_STRING, DB_ERROR]
+      default: SUCCESS
+      example: SUCCESS
+      nullable: true
+    WorkMode:
+      type: string
+      enum: [TEST, PROD, STUB]
+      default: TEST
+      example: TEST
+      nullable: true
     # Request schemas
     IRequest:
       type: object
@@ -125,6 +137,11 @@ components:
           type: string
           description: Поле-дескриминатор для вычисления типа запроса
           example: create
+        workMode:
+          $ref: '#/components/schemas/WorkMode'  # ← Ссылка на общий enum
+        stub:
+          $ref: '#/components/schemas/Stub'
+
       discriminator:
         propertyName: requestType
         mapping:

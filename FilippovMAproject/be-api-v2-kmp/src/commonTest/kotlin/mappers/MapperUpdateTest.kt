@@ -32,14 +32,14 @@ class MapperUpdateTest {
         context.fromTransport(request)
 
         assertEquals(MkplCommand.UPDATE, context.command)
-        assertEquals(McplAdvertisementId(789), context.adRequest.id)
+        assertEquals(MkplAdvertisementId(789), context.adRequest.id)
         assertEquals("Updated Title", context.adRequest.title)
         assertEquals("Updated Description", context.adRequest.description)
         assertEquals(1600000.0, context.adRequest.price)
         assertEquals("Toyota", context.adRequest.car.brand)
     }
     private fun createSampleAdvertisement(): MkplAdvertisement = MkplAdvertisement(
-        id = McplAdvertisementId(123),
+        id = MkplAdvertisementId(123),
         title = "Test Car",
         description = "Test Description",
         price = 1500000.0,
