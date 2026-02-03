@@ -32,11 +32,12 @@ class RepoAdSql(
     fun clear(): Unit = transaction(conn) {
         adTable.deleteAll()
     }
-
+//функция saveObj используется в методе createAd. adTable - это экземпляр класса AdTable с переданными
+// в него параметрами схемы и таблицы БД, взятыми из дата-класса SqlProperties
     private fun saveObj(ad: MkplAdvertisement): MkplAdvertisement = transaction(conn) {
         val res = adTable
-            .insert {
-                it.to(ad, randomLockUuid, randomUuid)
+            .insert {  //попытка вставить данные в таблицу БД
+                it.to(ad, randomLockUuid, randomUuid) //функция преобразования данных для вставки в бд из формата внутренней модели в формат запроса
             }
             .resultedValues
             ?.map { adTable.from(it) }
@@ -58,6 +59,9 @@ class RepoAdSql(
         transactionWrapper(block) { DbAdResponseErr(it.asMkplError()) }
 
     override fun save(ads: Collection<MkplAdvertisement>): Collection<MkplAdvertisement> = ads.map { saveObj(it) }
+    //createAd передает в обертку transactionWrapper конструктор класса DbAdResponseOk, в который передается
+    // функция saveObj с параметром содержащим объявление, переданное извне. saveObj в свою очередь работает с объектом adTable
+    //
     override suspend fun createAd(rq: DbAdRequest): IDbAdResponse = transactionWrapper {
         DbAdResponseOk(saveObj(rq.ad))
     }

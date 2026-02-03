@@ -24,9 +24,10 @@ private fun IRepoAdInitializable.clear() {
 
 @RunWith(Enclosed::class)
 class RepoAdSQLTest {
-
+//RepoAdSQLCreateTest наследуется от RepoAdCreateTest из модуля be-repo-tests
+// Внутри RepoAdCreateTest будет запущен метод createAd свой для каждого репозитория
     class RepoAdSQLCreateTest : RepoAdCreateTest() {
-        override val repo = repoUnderTestContainer(
+        override val repo = repoUnderTestContainer( //инициализируем sql репозиторий RepoAdSql
             initObjects,
             randomUuid = { uuidNew.asLong().toString() },
         )

@@ -9,7 +9,7 @@ fun Table.engineTypeEnumeration(
     columnName: String
 ) = customEnumeration(
     name = columnName,
-    sql = SqlFields.ENGINE_TYPE,
+    sql = SqlFields.ENGINE_TYPE_TYPE,
     fromDb = { value ->
         when (value.toString()) {
             SqlFields.ENGINE_TYPE_GAS -> MkplEngineType.GASOLINE
@@ -21,7 +21,7 @@ fun Table.engineTypeEnumeration(
     },
     toDb = { value ->
         when (value) {
-            MkplEngineType.GASOLINE -> PgEnginTypeGas
+            MkplEngineType.GASOLINE -> PgEngineTypeGas
             MkplEngineType.DIESEL -> PgEngineTypeDiesel
             MkplEngineType.HYBRID -> PgEngineTypeHybrid
             MkplEngineType.ELECTRIC -> PgEngineTypeElectric
@@ -31,13 +31,13 @@ fun Table.engineTypeEnumeration(
 
 sealed class PgEngineTypeValue(eValue: String) : PGobject() {
     init {
-        type = SqlFields.ENGINE_TYPE
+        type = SqlFields.ENGINE_TYPE_TYPE
         value = eValue
     }
 }
 
-object PgEnginTypeGas: PgEngineTypeValue(SqlFields.ENGINE_TYPE_GAS) {
-    private fun readResolve(): Any = PgEnginTypeGas
+object PgEngineTypeGas: PgEngineTypeValue(SqlFields.ENGINE_TYPE_GAS) {
+    private fun readResolve(): Any = PgEngineTypeGas
 }
 
 object PgEngineTypeDiesel: PgEngineTypeValue(SqlFields.ENGINE_TYPE_DIESEL) {

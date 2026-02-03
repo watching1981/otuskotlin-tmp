@@ -6,8 +6,7 @@ CREATE TYPE "mkpl_engine_type" AS ENUM (
     'GASOLINE',
     'DIESEL',
     'ELECTRIC',
-    'HYBRID',
-    'PLUGIN_HYBRID'
+    'HYBRID'
 );
 
 CREATE TYPE "mkpl_transmission_type" AS ENUM (
@@ -19,8 +18,10 @@ CREATE TYPE "mkpl_transmission_type" AS ENUM (
 
 CREATE TABLE "mkpl_advertisements" (
     "id" BIGSERIAL PRIMARY KEY,
-    "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+--    "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+--    "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "created_at" TEXT,
+    "updated_at" TEXT,
 
     "status" VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
     "author_id" BIGINT NOT NULL,
@@ -36,6 +37,7 @@ CREATE TABLE "mkpl_advertisements" (
     "price" DECIMAL(12,2) NOT NULL,
     "location" VARCHAR(100) NOT NULL,
 
+    "lock" TEXT NOT NULL,
     "title" TEXT,
     "description" TEXT
 );

@@ -4,8 +4,10 @@ import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import com.github.watching1981.common.models.*
-import kotlinx.datetime.Clock
+import jdk.jfr.internal.event.EventConfiguration.timestamp
 import kotlinx.datetime.Instant
+import kotlinx.datetime.toJavaInstant
+import java.sql.Timestamp
 
 class AdTable(tableName: String) : Table(tableName) {
     val id = long(SqlFields.ID)
@@ -21,6 +23,7 @@ class AdTable(tableName: String) : Table(tableName) {
     var location= text(SqlFields.LOCATION)
     var price= double(SqlFields.PRICE)
     var created_at= text(SqlFields.CREATED_AT)
+
     var updated_at= text(SqlFields.UPDATED_AT)
     val engine_type = engineTypeEnumeration(SqlFields.ENGINE_TYPE)
     val transmission = transmissionEnumeration(SqlFields.TRANSMISSION)
@@ -55,12 +58,13 @@ fun UpdateBuilder<*>.to(ad: MkplAdvertisement, randomLockUuid: () -> String, ran
     this[model] = ad.car.model
     this[status] = ad.status.name
     this[engine_type] = ad.car.engine.type
-    this[year] = ad.car.year.toInt()
-    this[mileage] = ad.car.mileage.toInt()
+    this[transmission] = ad.car.transmission
+    this[year] = ad.car.year
+    this[mileage] = ad.car.mileage
     this[location] = ad.location
     this[price] = ad.price
-    this[created_at] = (ad.createdAt ?: Clock.System.now()).toString()
-    this[updated_at] = (ad.updatedAt ?: Clock.System.now()).toString()
+    this[created_at] = ad.createdAt.toString()
+    this[updated_at] = ad.updatedAt.toString()
 
 }
 

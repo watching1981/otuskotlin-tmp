@@ -21,7 +21,8 @@ abstract class RepoAdCreateTest {
 
     @Test
     fun createSuccess() = runRepoTest {
-        val result = repo.createAd(DbAdRequest(createObj))
+        val result = repo.createAd(DbAdRequest(createObj)) //обращаемся к функции createAd sql-репозитория RepoAdSql
+        //передавая в нее тестовое объявление - объект createObj
         val expected = createObj
         assertIs<DbAdResponseOk>(result)
         assertEquals(uuidNew, result.data.id)

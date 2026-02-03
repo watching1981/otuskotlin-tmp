@@ -8,7 +8,7 @@ fun Table.transmissionEnumeration(
     columnName: String
 ) = customEnumeration(
     name = columnName,
-    sql = SqlFields.TRANSMISSION,
+    sql = SqlFields.TRANSMISSION_TYPE,
     fromDb = { value ->
         when (value.toString()) {
             SqlFields.TRANSMISSION_MAN -> MkplTransmission.MANUAL
@@ -31,7 +31,7 @@ fun Table.transmissionEnumeration(
 
 sealed class PgTransmissionValue(enVal: String): PGobject() {
     init {
-        type = SqlFields.TRANSMISSION
+        type = SqlFields.TRANSMISSION_TYPE
         value = enVal
     }
 }
