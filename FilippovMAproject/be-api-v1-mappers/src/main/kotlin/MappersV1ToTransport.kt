@@ -79,6 +79,7 @@ private fun calculateTotalPages(total: Int, size: Int): Int =
 
 private fun MkplAdvertisement.toAdData(): AdData = AdData(
     id = this.id.toTransportAd(),
+    lock =  this.lock.takeIf { it != MkplAdLock.NONE }?.asString(),
     title = this.title,
     description = this.description,
     price = this.price,
@@ -121,6 +122,8 @@ internal fun McplAdvertisementStatus.toTransport(): AdStatus? = when (this) {
     McplAdvertisementStatus.ARCHIVED -> AdStatus.ARCHIVED
     McplAdvertisementStatus.NONE -> null
 }
+
+
 
 internal fun MkplAdvertisementId.toTransportAd() = takeIf { it != MkplAdvertisementId.NONE }?.asLong()
 private fun List<MkplError>.toTransportErrors(): List<Error>? = this

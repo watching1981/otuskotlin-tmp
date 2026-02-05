@@ -4,10 +4,7 @@ import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import com.github.watching1981.common.models.*
-import jdk.jfr.internal.event.EventConfiguration.timestamp
 import kotlinx.datetime.Instant
-import kotlinx.datetime.toJavaInstant
-import java.sql.Timestamp
 
 class AdTable(tableName: String) : Table(tableName) {
     val id = long(SqlFields.ID)

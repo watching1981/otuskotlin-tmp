@@ -16,7 +16,8 @@ import kotlin.random.Random
 class RepoAdSql(
     properties: SqlProperties,
     private val randomLockUuid: () -> String = { uuid4().toString() },
-    private val randomUuid: () -> Long = { Random.nextLong(1, Long.MAX_VALUE)},
+    //private val randomUuid: () -> Long = { Random.nextLong(1, Long.MAX_VALUE)},
+    val randomUuid: () -> Long = {Random.nextLong(1, 1000000000L)},
 ) : IRepoAd, IRepoAdInitializable {
     private val adTable = AdTable("${properties.schema}.${properties.table}")
 
@@ -94,7 +95,10 @@ class RepoAdSql(
             }
         }
 
-
+    //в методе updateAd sql репозитория реализуется функция update (последний параметр функции update block вынесен за скобки, так как это лямбда)
+    //внутри лямбды вызывается метод updateReturning класса AdTable, реализующий запрос на обновление по id с получением выражения
+    // для запроса обновления путем выполнения метода to (), который  готовит список полей для обновления с новым случайным значением lock и
+    // остальными полями для обновления, прилетевшими в запросе
     override suspend fun updateAd(rq: DbAdRequest): IDbAdResponse = update(rq.ad.id, rq.ad.lock) {
         adTable.updateReturning(where = { adTable.id eq rq.ad.id.asLong() }) {
             it.to(rq.ad.copy(lock = MkplAdLock(randomLockUuid())), randomLockUuid, randomUuid)

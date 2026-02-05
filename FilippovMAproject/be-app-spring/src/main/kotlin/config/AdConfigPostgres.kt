@@ -14,7 +14,7 @@ data class AdConfigPostgres(
     var password: String = "car-pass",
     var database: String = "cars_ads",
     var schema: String = "public",
-    var table: String = "ads",
+    var table: String = "mkpl_advertisements",
 ) {
     val psql: SqlProperties = SqlProperties(
         host = host,

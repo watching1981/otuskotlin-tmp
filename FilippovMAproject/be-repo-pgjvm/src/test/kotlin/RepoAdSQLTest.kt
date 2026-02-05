@@ -23,6 +23,7 @@ private fun IRepoAdInitializable.clear() {
 }
 
 @RunWith(Enclosed::class)
+
 class RepoAdSQLTest {
 //RepoAdSQLCreateTest наследуется от RepoAdCreateTest из модуля be-repo-tests
 // Внутри RepoAdCreateTest будет запущен метод createAd свой для каждого репозитория

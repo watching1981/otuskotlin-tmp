@@ -20,6 +20,7 @@ suspend inline fun <T> IMkplAppSettings.controllerHelper(
     return try {
         //getRequest это функция, которая приходит извне (из AdControllerV1Fine при вызове оттуда метода controllerHelper)
         //в качестве первого параметра. По факту это метод fromTransport из AdControllerV1Fine. Он обогащает текущий контекст
+        //, добавляя в него в частности новое значение adRequest для последующей работы с ним
         ctx.getRequest()
         logger.info(
             msg = "Request $logId started for ${clazz.simpleName}",

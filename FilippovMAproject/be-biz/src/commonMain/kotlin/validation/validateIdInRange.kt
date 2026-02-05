@@ -11,6 +11,7 @@ fun ICorChainDsl<MkplContext>.validateIdInRange(title: String) = worker {
     on {
         val idValue = adValidating.id.asLong()
         idValue > 1000000000L  // пример: не больше 1 миллиарда
+
     }
     handle {
         val idValue = adValidating.id.asLong()

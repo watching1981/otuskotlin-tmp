@@ -15,6 +15,10 @@ fun ICorChainDsl<MkplContext>.repoPrepareUpdate(title: String) = worker {
             this.title = adValidated.title
             description = adValidated.description
             price=adValidated.price
+            car = adValidated.car
+            status =adValidated.status
+            location = adValidated.location
+            contactPhone = adValidated.contactPhone
 
         }
     }

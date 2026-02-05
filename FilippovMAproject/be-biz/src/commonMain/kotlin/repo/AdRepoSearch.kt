@@ -19,6 +19,8 @@ fun ICorChainDsl<MkplContext>.repoSearch(title: String) = worker {
         val filters = adFilterValidated.filters
         val request = DbAdFilterRequest(
             // Фильтры автомобиля
+            titleFilter = filters.title ?: "",
+            descriptionFilter = filters.description ?: "",
             brandFilter = filters.brand ?: "",
             modelFilter = filters.model ?: "",
             minYear = filters.minYear,

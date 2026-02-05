@@ -18,6 +18,8 @@ kermit = "2.0.3"
 
 #Frameworks
 spring-boot = "3.4.0"
+ktor = "2.3.12"
+
 
 exposed = "0.50.0"
 
@@ -55,6 +57,10 @@ spring-webflux = { module = "org.springframework.boot:spring-boot-starter-webflu
 spring-webflux-ui = { module = "org.springdoc:springdoc-openapi-starter-webflux-ui", version = "2.3.0" }
 spring-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 spring-mockk = "com.ninja-squad:springmockk:4.0.2"
+
+# Ktor
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 
 # Message Queues
 kafka-client = { module = "org.apache.kafka:kafka-clients", version = "3.7.0" }

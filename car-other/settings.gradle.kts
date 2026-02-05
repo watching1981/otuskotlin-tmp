@@ -20,6 +20,6 @@ pluginManagement {
     }
 }
 
-//include(":other-dcompose")
+include(":other-dcompose")
 include(":other-migration-pg")
 include(":other-migration-cs")

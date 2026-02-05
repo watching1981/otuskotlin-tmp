@@ -15,7 +15,9 @@ import kotlin.time.Duration.Companion.minutes
 
 class AdRepoInMemory(
     ttl: Duration = 5.minutes,
-    val randomUuid: () -> Long = {Random.nextLong(1, Long.MAX_VALUE)},
+
+    //val randomUuid: () -> Long = {Random.nextLong(1, Long.MAX_VALUE)},
+    val randomUuid: () -> Long = {Random.nextLong(1, 1000000000L)},
     val randomLockUuid: () -> String = { uuid4().toString() },
 ) : AdRepoBase(), IRepoAd, IRepoAdInitializable {
 
@@ -86,7 +88,7 @@ class AdRepoInMemory(
                 oldAd.lock == MkplAdLock.NONE -> errorDb(RepoEmptyLockException(id))
                 oldAd.lock != oldLock -> errorRepoConcurrency(oldAd, oldLock)
                 else -> {
-                    val newAd = rqAd.copy()
+                    val newAd = rqAd.copy(lock = MkplAdLock(randomLockUuid()))
                     val entity = AdEntity(newAd)
                     cache.put(key, entity)
                     DbAdResponseOk(newAd)
@@ -125,30 +127,21 @@ class AdRepoInMemory(
         // Применяем фильтры
         val filtered = allAds.filter { ad ->
             // 1. Фильтр по заголовку
-            (rq.titleFilter.isBlank() ||
-                    ad.title.contains(rq.titleFilter, ignoreCase = true)) &&
-
-                    // 2. Фильтр по описанию
-                    (rq.descriptionFilter.isBlank() ||
-                            ad.description.contains(rq.descriptionFilter, ignoreCase = true)) &&
-
-                    // 3. Фильтр по автору
-                    (rq.authorId == MkplUserId.NONE || ad.authorId == rq.authorId) &&
-
-                    // 9. Фильтр по типу двигателя
-                    (rq.engineTypes.isEmpty() ||
-                            (ad.car.engine.type != null && rq.engineTypes.contains(ad.car.engine.type ))) &&
-
-                    // 10. Фильтр по типу трансмиссии
-                    (rq.transmissions.isEmpty() ||
-                            (ad.car.transmission != null && rq.transmissions.contains(ad.car.transmission))) &&
-
-                    // 11. Фильтр по локации
-                    (rq.locationFilter.isBlank() ||
-                            ad.location.contains(rq.locationFilter, ignoreCase = true)) &&
-
-                    // 12. Фильтр по статусу
-                    (rq.status == null || ad.status == rq.status)
+              (rq.titleFilter.isBlank() ||
+              ad.title.contains(rq.titleFilter, ignoreCase = true)) &&
+             //  Фильтр по описанию
+             (rq.descriptionFilter.isBlank() ||
+              ad.description.contains(rq.descriptionFilter, ignoreCase = true)) &&
+             //  Фильтр по автору
+             (rq.authorId == MkplUserId.NONE || ad.authorId == rq.authorId) &&
+              rq.minYear?.let { ad.car.year >= it } ?: true &&
+              rq.maxYear?.let { ad.car.year <= it } ?: true &&
+              rq.minPrice?.let { ad.price >= it } ?: true &&
+              rq.maxPrice?.let { ad.price <= it } ?: true &&
+              (rq.brandFilter.isBlank() ||
+              ad.car.brand.contains(rq.brandFilter, ignoreCase = true)) &&
+              (rq.modelFilter.isBlank() ||
+                            ad.car.model.contains(rq.modelFilter, ignoreCase = true))
         }
 
         DbAdsResponseOk(filtered)

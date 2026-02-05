@@ -99,6 +99,8 @@ fun AdUpdateRequest.toBusiness(): MkplAdvertisement = MkplAdvertisement(
     price = this.price?: 0.0,
     status = this.status.fromTransport(),
     car = this.carInfo?.fromTransport() ?: MkplCar.NONE,
+    location = this.location.toString(),
+    contactPhone = this.contactPhone.toString(),
     updatedAt = Clock.System.now(),
     lock = lock.toAdLock(),
 )

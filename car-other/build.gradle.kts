@@ -19,8 +19,14 @@ subprojects {
 tasks {
     register("buildInfra") {
         group = "build"
-//        dependsOn(project(":other-dcompose").getTasksByName("publish",false))
-        dependsOn(project(":other-migration-cs").getTasksByName("buildImage",false))
-        dependsOn(project(":other-migration-pg").getTasksByName("buildImage",false))
+        dependsOn(project(":other-dcompose").getTasksByName("publish",false))
+        //dependsOn(project(":other-migration-cs").getTasksByName("buildImages",false))
+        dependsOn(project(":other-migration-pg").getTasksByName("buildImages",false))
+    }
+    arrayOf( "clean").forEach {tsk ->
+        register(tsk ) {
+            group = "build"
+            dependsOn(subprojects.map {  it.getTasksByName(tsk,false)})
+        }
     }
 }

@@ -1,8 +1,8 @@
 package com.github.watching1981.common.models
 
 data class MkplAdvertisementFilters(
-//    var brand: String? = "Toyota",
-//    var model: String? = "Camry",
+    var title: String? = null,
+    var description: String? = null,
     var brand: String? = null,
     var model: String? = null,
     val minYear: Int? = null,
