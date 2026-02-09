@@ -77,7 +77,7 @@ private fun MkplError.toLog(): ErrorLogModel = ErrorLogModel(
 )
 
 private fun MkplAdvertisement.toLog(): AdLog = AdLog(
-    id = id.takeIf { it != McplAdvertisementId.NONE }?.asString(),
+    id = id.takeIf { it != McplAdvertisementId.NONE }?.asLong(),
     title = title.takeIf { it.isNotBlank() },
     status = status.toLogStatus(),
     price = price.takeIf { it > 0.0 }?.toDouble(),

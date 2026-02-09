@@ -27,3 +27,4 @@ plugins {
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":car-lib-logging-common")
 include(":car-lib-logging-logback")
+include(":car-lib-cor")

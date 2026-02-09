@@ -4,7 +4,7 @@ import kotlin.jvm.JvmInline
 
 @JvmInline
 value class McplAdvertisementId(private val id: Long) {
-    fun asString() = id
+    fun asLong() = id
 
     companion object {
         val NONE = McplAdvertisementId(0)

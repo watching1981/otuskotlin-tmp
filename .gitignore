@@ -11,3 +11,4 @@
 **/*.iml
 **/.gradle/
 
+/lessons/m1l2-basic/src/main/kotlin/Main.kt

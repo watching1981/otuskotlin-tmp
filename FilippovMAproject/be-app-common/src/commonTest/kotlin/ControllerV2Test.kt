@@ -57,15 +57,7 @@ class ControllerV2Test {
         }
     }
 
-//    private suspend fun TestApplicationCall.createAdKtor(appSettings: IMkplAppSettings) {
-//        val resp = appSettings.controllerHelper(
-//            { fromTransport(receive<AdCreateRequest>()) },
-//            { toTransportAd() },
-//            ControllerV2Test::class,
-//            "controller-v2-test"
-//        )
-//        respond(resp as BaseResponse)
-//    }
+
 
     @Test
     fun springHelperTest() = runTest {
@@ -73,10 +65,5 @@ class ControllerV2Test {
         assertEquals(ResponseResult.SUCCESS, res.result)
     }
 
- //   @Test
-//    fun ktorHelperTest() = runTest {
-//        val testApp = TestApplicationCall(request).apply { createAdKtor(appSettings) }
-//        val res = testApp.res as AdCreateResponse
-//        assertEquals(ResponseResult.SUCCESS, res.result)
-//    }
+
 }
