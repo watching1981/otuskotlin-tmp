@@ -166,6 +166,14 @@ components:
           type: string
           format: date-time
           example: "2023-10-05T14:30:00Z"
+      discriminator:
+        propertyName: responseType
+        mapping:
+          create: '#/components/schemas/AdCreateResponse'
+          get: '#/components/schemas/AdGetResponse'
+          update: '#/components/schemas/AdUpdateResponse'
+          delete: '#/components/schemas/AdDeleteResponse'
+          search: '#/components/schemas/AdSearchResponse'
     AdLock:
       type: string
       description: Версия оптимистичной блокировки

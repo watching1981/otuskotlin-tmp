@@ -16,8 +16,9 @@ import kotlin.time.Duration.Companion.minutes
 class AdRepoInMemory(
     ttl: Duration = 5.minutes,
 
-    //val randomUuid: () -> Long = {Random.nextLong(1, Long.MAX_VALUE)},
-    val randomUuid: () -> Long = {Random.nextLong(1, 1000000000L)},
+    val randomUuid: () -> Long = {Random.nextLong(1L, 1_000_000_001L)},
+    //val randomUuid: () -> Long = {Random.nextLong(1, 1000000000L)},
+
     val randomLockUuid: () -> String = { uuid4().toString() },
 ) : AdRepoBase(), IRepoAd, IRepoAdInitializable {
 

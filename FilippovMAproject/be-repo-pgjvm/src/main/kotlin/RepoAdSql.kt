@@ -16,8 +16,9 @@ import kotlin.random.Random
 class RepoAdSql(
     properties: SqlProperties,
     private val randomLockUuid: () -> String = { uuid4().toString() },
-    //private val randomUuid: () -> Long = { Random.nextLong(1, Long.MAX_VALUE)},
-    val randomUuid: () -> Long = {Random.nextLong(1, 1000000000L)},
+
+    //val randomUuid: () -> Long = {Random.nextLong(1, 1000000000L)},
+    val randomUuid: () -> Long = {Random.nextLong(1L, 1_000_000_001L)},
 ) : IRepoAd, IRepoAdInitializable {
     private val adTable = AdTable("${properties.schema}.${properties.table}")
 

@@ -8,13 +8,7 @@
     "jsonBody": {
       "responseType": "delete",
       "result": "success",
-      "ad": {
-        "id": "{{{jsonPath request.body '$.ad.id'}}}",
-        "title": "Требуется болт",
-        "description": "Требуется болт 100x5 с шестигранной шляпкой",
-        "adType": "demand",
-        "visibility": "public"
-      }
+      "deletedAdId": "{{{jsonPath request.body '$.id'}}}"
     },
     "headers": {
       "Content-Type": "application/json"

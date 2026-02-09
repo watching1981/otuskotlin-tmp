@@ -155,6 +155,8 @@ components:
       properties:
         responseType:
           type: string
+        ad:
+          $ref: '#/components/schemas/AdData'
         result:
           $ref: '#/components/schemas/ResponseResult'
         errors:
