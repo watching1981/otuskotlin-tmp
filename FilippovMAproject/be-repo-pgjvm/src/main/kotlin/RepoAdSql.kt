@@ -11,6 +11,10 @@ import com.github.watching1981.common.models.*
 import com.github.watching1981.common.repo.*
 import com.github.watching1981.common.repo.errorNotFound
 import com.github.watching1981.repo.common.IRepoAdInitializable
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.greaterEq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.lessEq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.like
 import kotlin.random.Random
 
 class RepoAdSql(
@@ -113,24 +117,105 @@ class RepoAdSql(
         DbAdResponseOk(it)
     }
 
+
+
+
+//    override suspend fun searchAd(rq: DbAdFilterRequest): IDbAdsResponse =
+//        transactionWrapper({
+//            val res = adTable.selectAll().where {
+//                buildList {
+//                    add(Op.TRUE)
+//                    if (rq.authorId != MkplUserId.NONE) {
+//                        add(adTable.author_id eq rq.authorId.value)
+//                    }
+//                    if (rq.titleFilter.isNotBlank()) {
+//                        add(
+//                            (adTable.title like "%${rq.titleFilter}%")
+//                                    or (adTable.description like "%${rq.titleFilter}%")
+//                        )
+//                    }
+//
+//                }.reduce { a, b -> a and b }
+//            }
+//            DbAdsResponseOk(data = res.map { adTable.from(it) })
+//        }, {
+//            DbAdsResponseErr(it.asMkplError())
+//        })
+
     override suspend fun searchAd(rq: DbAdFilterRequest): IDbAdsResponse =
         transactionWrapper({
-            val res = adTable.selectAll().where {
-                buildList {
-                    add(Op.TRUE)
-                    if (rq.authorId != MkplUserId.NONE) {
-                        add(adTable.author_id eq rq.authorId.value)
-                    }
-                    if (rq.titleFilter.isNotBlank()) {
-                        add(
-                            (adTable.title like "%${rq.titleFilter}%")
-                                    or (adTable.description like "%${rq.titleFilter}%")
-                        )
-                    }
-                }.reduce { a, b -> a and b }
+            // Начинаем с базового запроса
+            var query = adTable.selectAll()
+            // Построение условий фильтрации
+            val conditions = buildList<Op<Boolean>> {
+                // Фильтр по автору
+                if (rq.authorId != MkplUserId.NONE) {
+                    add(adTable.author_id eq rq.authorId.value)
+                }
+                // Фильтр по заголовку и описанию
+                if (rq.titleFilter.isNotBlank()) {
+                    add(adTable.title like "%${rq.titleFilter}%")
+                }
+
+                if (rq.descriptionFilter.isNotBlank()) {
+                    add(adTable.description like "%${rq.descriptionFilter}%")
+                }
+
+                // Фильтры автомобиля
+                if (rq.brandFilter.isNotBlank()) {
+                    add(adTable.brand like "%${rq.brandFilter}%")
+                }
+
+                if (rq.modelFilter.isNotBlank()) {
+                    add(adTable.model like "%${rq.modelFilter}%")
+                }
+
+                // Фильтры по году
+                rq.minYear?.let { add(adTable.year greaterEq it) }
+                rq.maxYear?.let { add(adTable.year lessEq it) }
+
+                // Фильтры по цене
+                rq.minPrice?.let { add(adTable.price greaterEq it) }
+                rq.maxPrice?.let { add(adTable.price lessEq it) }
+
+//                // Фильтры по пробегу
+//                rq.minMileage?.let { add(adTable.mileage greaterEq it) }
+//                rq.maxMileage?.let { add(adTable.mileage lessEq it) }
+
+//                // Фильтры по типу двигателя
+//                if (rq.engineTypes.isNotEmpty()) {
+//                    add(adTable.engine_type inList  rq.engineTypes)
+//                }
+//
+//                // Фильтры по трансмиссии
+//                if (rq.transmissions.isNotEmpty()) {
+//                    add(adTable.transmission inList rq.transmissions)
+//                }
+
+                // Фильтр по локации
+                if (rq.locationFilter.isNotBlank()) {
+                    add(adTable.location like "%${rq.locationFilter}%")
+                }
+
+//                // Фильтр по статусу
+//                rq.status?.let { add(adTable.status eq it.name) }
             }
-            DbAdsResponseOk(data = res.map { adTable.from(it) })
-        }, {
+
+            // Применяем все условия через AND
+            if (conditions.isNotEmpty()) {
+                query = query.andWhere { conditions.reduce { acc, condition -> acc and condition } }
+            }
+            val totalQuery = query.limit(Int.MAX_VALUE, 0)
+            val results = transaction { totalQuery.map { adTable.from(it) } }
+            DbAdsResponseOk(
+                data = results
+
+            )
+
+        },{
             DbAdsResponseErr(it.asMkplError())
         })
+
+
+
 }
