@@ -34,6 +34,9 @@ CREATE TABLE "mkpl_advertisements" (
     "transmission" mkpl_transmission_type NOT NULL,
 
     "mileage" INTEGER NOT NULL,
+    "horsePower" INTEGER,
+    "engineVolume" DECIMAL(12,2),
+    "color" VARCHAR(50),
     "price" DECIMAL(12,2) NOT NULL,
     "location" VARCHAR(100) NOT NULL,
 

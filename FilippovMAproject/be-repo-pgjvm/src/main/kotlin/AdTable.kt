@@ -20,7 +20,9 @@ class AdTable(tableName: String) : Table(tableName) {
     var location= text(SqlFields.LOCATION)
     var price= double(SqlFields.PRICE)
     var created_at= text(SqlFields.CREATED_AT)
-
+    var engine_volume = double(SqlFields.ENGINE_VOLUME)
+    var horse_power = integer(SqlFields.HORSE_POWER)
+    var color = text(SqlFields.COLOR)
     var updated_at= text(SqlFields.UPDATED_AT)
     val engine_type = engineTypeEnumeration(SqlFields.ENGINE_TYPE)
     val transmission = transmissionEnumeration(SqlFields.TRANSMISSION)
@@ -35,7 +37,7 @@ class AdTable(tableName: String) : Table(tableName) {
         title = res[title] ?: "",
         description = res[description] ?: "",
         price = res[price].toDouble(),
-        car = MkplCar(brand = res[brand], model = res[model], year =res[year].toInt(), mileage = res[mileage].toInt(), engine = MkplEngine(type = res[engine_type],volume = 0.0, horsePower =0 ),transmission = res[transmission] ),
+        car = MkplCar(brand = res[brand], model = res[model], year =res[year].toInt(), mileage = res[mileage].toInt(), color = res[color], engine = MkplEngine(type = res[engine_type],volume = res[engine_volume].toDouble(), horsePower =res[horse_power].toInt() ),transmission = res[transmission] ),
         status = McplAdvertisementStatus.valueOf(res[status]),
         authorId = MkplUserId(res[author_id]),
         lock = MkplAdLock(res[lock]),
@@ -58,6 +60,9 @@ fun UpdateBuilder<*>.to(ad: MkplAdvertisement, randomLockUuid: () -> String, ran
     this[transmission] = ad.car.transmission
     this[year] = ad.car.year
     this[mileage] = ad.car.mileage
+    this[engine_volume] = ad.car.engine.volume
+    this[horse_power] = ad.car.engine.horsePower?.toInt() ?: 0
+    this[color] = ad.car.color
     this[location] = ad.location
     this[price] = ad.price
     this[created_at] = ad.createdAt.toString()
