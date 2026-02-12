@@ -24,4 +24,4 @@ plugins {
 
 rootProject.name = "FilippovMAproject"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-include(":be-tmp", "be-api-v1-jacson", "be-api-v2-kmp","be-common","be-api-v1-mappers","be-stubs","be-biz","be-api-log1","be-app-common","be-app-spring","be-app-kafka")
+include(":be-tmp", "be-api-v1-jacson", "be-api-v2-kmp","be-common","be-api-v1-mappers","be-stubs","be-biz","be-api-log1","be-app-common","be-app-spring","be-app-kafka" , "be-repo-common", "be-repo-inmemory", "be-repo-tests", "be-repo-stubs","be-repo-pgjvm")

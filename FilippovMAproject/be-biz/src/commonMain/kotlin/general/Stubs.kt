@@ -10,5 +10,5 @@ fun ICorChainDsl<MkplContext>.stubs(title: String, block: ICorChainDsl<MkplConte
     block()
     this.title = title
     on { workMode == MkplWorkMode.STUB && state == MkplState.RUNNING }
-    //on { state == MkplState.RUNNING }
+
 }

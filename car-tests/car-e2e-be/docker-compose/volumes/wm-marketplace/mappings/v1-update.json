@@ -1,0 +1,35 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/v1/ad/update"
+  },
+
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "responseType": "update",
+      "result": "success",
+      "ad": {
+        "id": "123",
+        "title": "Toyota Camry 2019 года в хорошем состоянии",
+        "description": "Автомобиль в хорошем состоянии, один хозяин, полная сервисная история. Без ДТП.",
+        "price": "1000000.0",
+        "carInfo": {
+          "brand": "{{{jsonPath request.body '$.carInfo.brand'}}}",
+          "model": "{{{jsonPath request.body '$.carInfo.model'}}}",
+          "year": "{{jsonPath request.body '$.carInfo.year'}}",
+          "mileage": "{{jsonPath request.body '$.carInfo.mileage'}}",
+          "color": "{{{jsonPath request.body '$.carInfo.color'}}}",
+          "engineType": "{{{jsonPath request.body '$.carInfo.engineType'}}}",
+          "engineVolume": "{{jsonPath request.body '$.carInfo.engineVolume'}}",
+          "horsePower": "{{jsonPath request.body '$.carInfo.horsePower'}}",
+          "transmission": "{{{jsonPath request.body '$.carInfo.transmission'}}}"
+        }
+      }
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "transformers": ["response-template"]
+  }
+}

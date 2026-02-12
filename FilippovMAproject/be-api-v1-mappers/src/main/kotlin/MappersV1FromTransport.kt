@@ -3,27 +3,33 @@ package com.github.watching1981.mappers.v1
 import com.github.watching1981.api.v1.models.*
 import com.github.watching1981.common.MkplContext
 import com.github.watching1981.common.models.*
+import com.github.watching1981.common.stubs.MkplStubs
 
 
 import com.github.watching1981.mappers.v1.exceptions.UnknownRequestClass
 import kotlinx.datetime.Clock
 
-fun MkplContext.fromTransport(request: IRequest) = when (request) {
-    is AdCreateRequest -> fromTransportCreate(request)
-    is AdGetRequest -> fromTransportGet(request)
-    is AdUpdateRequest -> fromTransportUpdate(request)
-    is AdDeleteRequest -> fromTransportDelete(request)
-    is AdSearchRequest -> fromTransportSearch(request)
-    else -> throw UnknownRequestClass(request.javaClass)
+fun MkplContext.fromTransport(request: IRequest) {
+    //this.workMode = workMode
+    when (request) {
+        is AdCreateRequest -> fromTransportCreate(request)
+        is AdGetRequest -> fromTransportGet(request)
+        is AdUpdateRequest -> fromTransportUpdate(request)
+        is AdDeleteRequest -> fromTransportDelete(request)
+        is AdSearchRequest -> fromTransportSearch(request)
+        else -> throw UnknownRequestClass(request.javaClass)
+    }
 }
 
-private fun Long?.toAdId() = this?.let { McplAdvertisementId(it) } ?: McplAdvertisementId.NONE
+private fun Long?.toAdId() = this?.let { MkplAdvertisementId(it) } ?: MkplAdvertisementId.NONE
 private fun String?.toAdLock() = this?.let { MkplAdLock(it) } ?: MkplAdLock.NONE
 
 
 fun MkplContext.fromTransportGet(request: AdGetRequest) {
     command = MkplCommand.GET
     adRequest = request.toBusiness()
+    workMode= request.workMode?.transportToWorkMode() ?: MkplWorkMode.PROD
+    stubCase = request.stub?.transportToStub() ?: MkplStubs.SUCCESS
 }
 
 private fun AdGetRequest?.toBusiness(): MkplAdvertisement = if (this != null) {
@@ -37,6 +43,8 @@ private fun AdGetRequest?.toBusiness(): MkplAdvertisement = if (this != null) {
 fun MkplContext.fromTransportCreate(request: AdCreateRequest) {
     command = MkplCommand.CREATE
     adRequest = request.toBusiness()
+    workMode = request.workMode?.transportToWorkMode() ?: MkplWorkMode.PROD
+    stubCase = request.stub?.transportToStub() ?: MkplStubs.SUCCESS
 }
 fun CarInfo.fromTransport():MkplCar= MkplCar(
     brand = this.brand,
@@ -65,7 +73,7 @@ fun Transmission.fromTransport():MkplTransmission=when(this) {
 }
 
 private fun AdCreateRequest.toBusiness(): MkplAdvertisement = MkplAdvertisement(
-    id = McplAdvertisementId.NONE,
+    id = MkplAdvertisementId.NONE,
     title = this.title,
     description = this.description,
     price = this.price,
@@ -81,6 +89,8 @@ private fun AdCreateRequest.toBusiness(): MkplAdvertisement = MkplAdvertisement(
 fun MkplContext.fromTransportUpdate(request: AdUpdateRequest) {
     command = MkplCommand.UPDATE
     adRequest = request.toBusiness()
+    workMode= request.workMode?.transportToWorkMode() ?: MkplWorkMode.PROD
+    stubCase = request.stub?.transportToStub() ?: MkplStubs.SUCCESS
 }
 fun AdUpdateRequest.toBusiness(): MkplAdvertisement = MkplAdvertisement(
     id = this.id.toAdId(),
@@ -89,6 +99,8 @@ fun AdUpdateRequest.toBusiness(): MkplAdvertisement = MkplAdvertisement(
     price = this.price?: 0.0,
     status = this.status.fromTransport(),
     car = this.carInfo?.fromTransport() ?: MkplCar.NONE,
+    location = this.location.toString(),
+    contactPhone = this.contactPhone.toString(),
     updatedAt = Clock.System.now(),
     lock = lock.toAdLock(),
 )
@@ -96,6 +108,7 @@ fun AdUpdateRequest.toBusiness(): MkplAdvertisement = MkplAdvertisement(
 fun MkplContext.fromTransportDelete(request: AdDeleteRequest) {
     command = MkplCommand.DELETE
     adRequest = request.toBusiness()
+    workMode= request.workMode?.transportToWorkMode() ?: MkplWorkMode.PROD
 }
 
 private fun AdDeleteRequest.toBusiness(): MkplAdvertisement = if (this != null) {
@@ -110,6 +123,8 @@ private fun AdDeleteRequest.toBusiness(): MkplAdvertisement = if (this != null) 
 fun MkplContext.fromTransportSearch(request: AdSearchRequest) {
     command = MkplCommand.SEARCH
     adFilterRequest = request.toBusiness()
+    workMode= request.workMode?.transportToWorkMode() ?: MkplWorkMode.PROD
+    stubCase = request.stub?.transportToStub() ?: MkplStubs.SUCCESS
 
 }
 fun AdSearchRequest.toBusiness(): MkplAdvertisementSearch = MkplAdvertisementSearch(
@@ -132,6 +147,22 @@ fun AdSearchRequest.toBusiness(): MkplAdvertisementSearch = MkplAdvertisementSea
     )
 )
 
+private fun WorkMode.transportToWorkMode(): MkplWorkMode = when (this) {
+        WorkMode.PROD -> MkplWorkMode.PROD
+        WorkMode.TEST -> MkplWorkMode.TEST
+        WorkMode.STUB -> MkplWorkMode.STUB
+        else -> MkplWorkMode.PROD // default fallback
+}
+private fun Stub.transportToStub(): MkplStubs = when (this) {
+    Stub.SUCCESS -> MkplStubs.SUCCESS
+    Stub.NOT_FOUND -> MkplStubs.NOT_FOUND
+    Stub.BAD_ID -> MkplStubs.BAD_TITLE
+    Stub.BAD_DESCRIPTION -> MkplStubs.BAD_DESCRIPTION
+    Stub.CANNOT_DELETE -> MkplStubs.CANNOT_DELETE
+    Stub.BAD_SEARCH_STRING -> MkplStubs.BAD_SEARCH_STRING
+    Stub.DB_ERROR -> MkplStubs.DB_ERROR
+    else -> MkplStubs.NONE // default fallback
+}
 
 
 private fun AdStatus?.fromTransport(): McplAdvertisementStatus = when (this) {

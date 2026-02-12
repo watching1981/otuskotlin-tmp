@@ -10,7 +10,7 @@ import kotlin.test.assertTrue
 
 class MapperDeleteTest {
     private fun createSampleAdvertisement(): MkplAdvertisement = MkplAdvertisement(
-        id = McplAdvertisementId(123),
+        id = MkplAdvertisementId(123),
         title = "Test Car",
         description = "Test Description",
         price = 1500000.0,
@@ -38,7 +38,7 @@ class MapperDeleteTest {
         context.fromTransport(request)
 
         assertEquals(MkplCommand.DELETE, context.command)
-        assertEquals(McplAdvertisementId(999), context.adRequest.id)
+        assertEquals(MkplAdvertisementId(999), context.adRequest.id)
     }
 
     @Test
@@ -55,50 +55,5 @@ class MapperDeleteTest {
         assertEquals(123, response.deletedAdId)
         assertTrue(response.deletionTime!!.isNotBlank())
     }
-//    @Test
-//    fun fromTransport() {
-//        val ad = MkplAdStub.get()
-//        val req = AdDeleteRequest(
-//            debug = AdDebug(
-//                mode = AdRequestDebugMode.STUB,
-//                stub = AdRequestDebugStubs.SUCCESS,
-//            ),
-//            ad = MkplAdStub.get().toTransportDeleteAd(),
-//        )
-//
-//        val context = MkplContext()
-//        context.fromTransport(req)
-//
-//        assertEquals(MkplStubs.SUCCESS, context.stubCase)
-//        assertEquals(MkplWorkMode.STUB, context.workMode)
-//        assertEquals(ad.id.toTransportAd(), context.adRequest.id.asString())
-//        assertEquals(ad.lock.toTransportAd(), context.adRequest.lock.asString())
-//    }
-//
-//    @Test
-//    fun toTransport() {
-//        val context = MkplContext(
-//            requestId = MkplRequestId("1234"),
-//            command = MkplCommand.DELETE,
-//            adResponse = MkplAdStub.get(),
-//            errors = mutableListOf(
-//                MkplError(
-//                    code = "err",
-//                    group = "request",
-//                    field = "title",
-//                    message = "wrong title",
-//                )
-//            ),
-//            state = MkplState.RUNNING,
-//        )
-//
-//        val req = context.toTransportAd() as AdDeleteResponse
-//
-//        assertEquals(MkplAdStub.get().toTransportAd(), req.ad)
-//        assertEquals(1, req.errors?.size)
-//        assertEquals("err", req.errors?.firstOrNull()?.code)
-//        assertEquals("request", req.errors?.firstOrNull()?.group)
-//        assertEquals("title", req.errors?.firstOrNull()?.field)
-//        assertEquals("wrong title", req.errors?.firstOrNull()?.message)
-//    }
+
 }

@@ -6,30 +6,6 @@ import kotlin.test.assertContains
 import kotlin.test.assertEquals
 
 class ResponseV1SerializationTest {
-//    private val response = AdResponse(
-//        result = ResponseResult.SUCCESS,
-//        errors = emptyList(),
-//        timestamp = "2025-10-05T14:30:00Z",
-//        id = 123,
-//        lock = "lock-123456",
-//        title = "Toyota Camry 2020 года в отличном состоянии",
-//        description = "Автомобиль в идеальном состоянии, один хозяин, полная сервисная история. Без ДТП.",
-//        price = 2000000.0,
-//        carInfo = CarInfo(
-//            brand = "Toyota",
-//            model = "Camry",
-//            year = 2018,
-//            mileage = 75000,
-//            color = "Черный",
-//            engineType = EngineType.GASOLINE,
-//            engineVolume = 2.5,
-//            transmission = Transmission.AUTOMATIC
-//        ),
-//        status = AdStatus.ACTIVE,
-//        location = "Тюмень",
-//        contactPhone = "+79821234567",
-//        createdAt = "2025-10-05T14:30:00Z"
-//    )
 private val sampleAdData = AdData(
     id = 123,
     lock = "lock-123456",

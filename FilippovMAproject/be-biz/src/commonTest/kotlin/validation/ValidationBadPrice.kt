@@ -5,7 +5,6 @@ import com.github.watching1981.car.biz.MkplAdProcessor
 import com.github.watching1981.common.MkplContext
 import com.github.watching1981.common.models.*
 import com.github.watching1981.stubs.MkplAdStub
-import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 

@@ -17,7 +17,7 @@ fun MkplContext.toTransportAd(): Any = when (this.command) {
 }
 
 
-private fun Long?.toAdId() = this?.let { McplAdvertisementId(it) } ?: McplAdvertisementId.NONE
+private fun Long?.toAdId() = this?.let { MkplAdvertisementId(it) } ?: MkplAdvertisementId.NONE
 
 fun MkplContext.toAdCreateResponse(): AdCreateResponse =
     AdCreateResponse(
@@ -113,7 +113,7 @@ internal fun McplAdvertisementStatus.toTransport(): AdStatus? = when (this) {
     McplAdvertisementStatus.NONE -> null
 }
 
-internal fun McplAdvertisementId.toTransportAd() = takeIf { it != McplAdvertisementId.NONE }?.asLong()
+internal fun MkplAdvertisementId.toTransportAd() = takeIf { it != MkplAdvertisementId.NONE }?.asLong()
 private fun List<MkplError>.toTransportErrors(): List<Error>? = this
     .map { it.toTransportAd() }
     .toList()

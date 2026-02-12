@@ -47,7 +47,7 @@ class MapperCreateTest {
 
     }
     private fun createSampleAdvertisement(): MkplAdvertisement = MkplAdvertisement(
-        id = McplAdvertisementId(123),
+        id = MkplAdvertisementId(123),
         title = "Test Car",
         description = "Test Description",
         price = 1500000.0,

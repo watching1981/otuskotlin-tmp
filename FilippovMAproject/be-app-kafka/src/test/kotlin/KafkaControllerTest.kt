@@ -9,11 +9,10 @@ import org.apache.kafka.common.serialization.StringSerializer
 import org.junit.Test
 import com.github.watching1981.api.v1.apiV1RequestSerialize
 import com.github.watching1981.api.v1.apiV1ResponseDeserialize
-import com.github.watching1981.api.v1.models.AdCreateRequest
-import com.github.watching1981.api.v1.models.AdCreateResponse
-import com.github.watching1981.api.v1.models.CarInfo
-import com.github.watching1981.api.v1.models.EngineType
-import com.github.watching1981.api.v1.models.Transmission
+import com.github.watching1981.api.v1.models.*
+import com.github.watching1981.common.MkplContext
+import com.github.watching1981.common.models.MkplWorkMode
+import com.github.watching1981.common.stubs.MkplStubs
 import com.github.watching1981.marketplace.app.kafka.AppKafkaConsumer
 import java.util.*
 import kotlin.test.assertEquals
@@ -53,7 +52,10 @@ class KafkaControllerTest {
                                 transmission = Transmission.AUTOMATIC
                             ),
                             location = "Москва",
-                            contactPhone = "+79991234567"
+                            contactPhone = "+79991234567",
+                            workMode = WorkMode.STUB,
+                            stub = Stub.SUCCESS
+
                         ),
                     )
                 )
@@ -65,7 +67,6 @@ class KafkaControllerTest {
         val tp = TopicPartition(inputTopic, PARTITION)
         startOffsets[tp] = 0L
         consumer.updateBeginningOffsets(startOffsets)
-
         app.start()
 
         val message = producer.history().first()

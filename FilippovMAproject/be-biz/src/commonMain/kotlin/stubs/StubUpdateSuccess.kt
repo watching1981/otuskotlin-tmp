@@ -20,10 +20,10 @@ fun ICorChainDsl<MkplContext>.stubUpdateSuccess(title: String, corSettings: Mkpl
         logger.doWithLogging(id = this.requestId.asString(), LogLevel.DEBUG) {
             state = MkplState.FINISHING
             val stub = MkplAdStub.prepareResult {
-                adRequest.id.takeIf { it != McplAdvertisementId.NONE }?.also { this.id = it }
+                adRequest.id.takeIf { it != MkplAdvertisementId.NONE }?.also { this.id = it }
                 adRequest.title.takeIf { it.isNotBlank() }?.also { this.title = it }
                 adRequest.description.takeIf { it.isNotBlank() }?.also { this.description = it }
-                adRequest.price.takeIf { it > 0 }?.let { this.price = it }
+                adRequest.price.takeIf { it!! > 0 }?.let { this.price = it }
                 adRequest.status.let { status -> this.status = McplAdvertisementStatus.valueOf(status.name)
                 }
                 // Информация об автомобиле

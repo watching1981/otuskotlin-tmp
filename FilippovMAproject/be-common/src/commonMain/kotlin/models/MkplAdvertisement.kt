@@ -5,7 +5,7 @@ import kotlinx.datetime.Instant
 
 
 data class MkplAdvertisement(
-    var id: McplAdvertisementId =McplAdvertisementId.NONE,
+    var id: MkplAdvertisementId =MkplAdvertisementId.NONE,
     var title: String = "",
     var description: String ="",
     var price: Double = 0.0,
@@ -16,8 +16,8 @@ data class MkplAdvertisement(
     var contactPhone: String="",
     var authorId: MkplUserId=MkplUserId.NONE,
     var lock: MkplAdLock = MkplAdLock.NONE,
-    val createdAt: Instant = Clock.System.now(),
-    var updatedAt: Instant = Clock.System.now(),
+    val createdAt: Instant? = Clock.System.now(),
+    var updatedAt: Instant? = Clock.System.now(),
     var viewsCount: Int = 0,
     var favoriteCount: Int = 0
 ) {

@@ -21,7 +21,7 @@ fun validationDescriptionCorrect(command: MkplCommand, processor: MkplAdProcesso
             title = "Test_Car",
             description = "Test_Description",
             price = 1500000.0,
-            lock = MkplAdLock("123-234-abc-ABC"),
+            lock = MkplAdLock("124-354"),
             car = MkplCar(
                 brand = "Toyota",
                 model = "Camry",
@@ -49,11 +49,11 @@ fun validationDescriptionTrim(command: MkplCommand, processor: MkplAdProcessor) 
         state = MkplState.NONE,
         workMode = MkplWorkMode.TEST,
         adRequest = MkplAdvertisement(
-            id = McplAdvertisementId(123),
+            id = MkplAdvertisementId(1),
             title = "Test Car",
             description = " \n\tabc \n\t",
             price = 1500000.0,
-            lock = MkplAdLock("123-234-abc-ABC"),
+            lock = MkplAdLock("124-354"),
             car = MkplCar(
                 brand = "Toyota",
                 model = "Camry",
@@ -81,7 +81,7 @@ fun validationDescriptionEmpty(command: MkplCommand, processor: MkplAdProcessor)
         state = MkplState.NONE,
         workMode = MkplWorkMode.TEST,
         adRequest = MkplAdvertisement(
-            id = McplAdvertisementId(123),
+            id = MkplAdvertisementId(123),
             title = "Test Car",
             description = "",
             price = 1500000.0,
@@ -115,7 +115,7 @@ fun validationDescriptionSymbols(command: MkplCommand, processor: MkplAdProcesso
         state = MkplState.NONE,
         workMode = MkplWorkMode.TEST,
         adRequest =  MkplAdvertisement(
-            id = McplAdvertisementId(123),
+            id = MkplAdvertisementId(123),
             title = "Test Car",
             description = "!@#$%^&*(),.{}",
             lock = MkplAdLock("123-234-abc-ABC"),

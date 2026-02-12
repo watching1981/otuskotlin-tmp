@@ -22,7 +22,7 @@ fun ICorChainDsl<MkplContext>.stubCreateSuccess(title: String, corSettings: Mkpl
             val stub = MkplAdStub.prepareResult {
                 adRequest.title.takeIf { it.isNotBlank() }?.also { this.title = it }
                 adRequest.description.takeIf { it.isNotBlank() }?.also { this.description = it }
-                adRequest.price.takeIf { it>0 }?.also { this.price = it }
+                adRequest.price.takeIf { it!! >0 }?.also { this.price = it }
 
                 // Информация об автомобиле
                 adRequest.car?.let { carInfo ->

@@ -1,0 +1,49 @@
+version: '3.9'
+
+services:
+  app-spring:
+    image: be-app-spring:0.0.1
+    ports:
+      - "8080:8080"
+    environment:
+      DB_TYPE_PROD: "psql"
+      MKPLADS_HOST: "psql"
+      MKPLADS_PORT: 5432
+      MKPLADS_DB: "cars_ads"
+      MKPLADS_USER: "postgres"
+      MKPLADS_PASS: "car-pass"
+      THC_PATH: "/actuator/health"
+    depends_on:
+      psql:
+        condition: service_healthy
+      liquibase:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "/workspace/health-check"]
+  psql:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: "car-pass"
+      POSTGRES_USER: "postgres"
+      POSTGRES_DB: "cars_ads"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  liquibase:
+    image: "other-migration-pg"
+    environment:
+      LIQUIBASE_URL:
+      LIQUIBASE_COMMAND_URL: jdbc:postgresql://psql:5432/cars_ads
+      LIQUIBASE_COMMAND_USERNAME: postgres
+      LIQUIBASE_COMMAND_PASSWORD: "car-pass"
+      LIQUIBASE_LIQUIBASE_SCHEMA_NAME: public
+
+
+    depends_on:
+      psql:
+        condition: service_healthy

@@ -8,6 +8,9 @@ import com.github.watching1981.app.common.IMkplAppSettings
 import com.github.watching1981.app.common.controllerHelper
 import com.github.watching1981.car.biz.MkplAdProcessor
 import com.github.watching1981.common.MkplCorSettings
+import com.github.watching1981.common.models.MkplAdLock
+import com.github.watching1981.common.models.MkplWorkMode
+import com.github.watching1981.common.stubs.MkplStubs
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -16,7 +19,7 @@ class ControllerV2Test {
 
 
 
-    private val request: IRequest = AdCreateRequest(
+    private val request= AdCreateRequest(
         title = "Toyota Camry 2019 года в отличном состоянии",
         description = "Автомобиль в идеальном состоянии, один хозяин, полная сервисная история. Без ДТП.",
         price = 1500000.0,
@@ -41,21 +44,13 @@ class ControllerV2Test {
 
     private suspend fun createAdSpring(request: AdCreateRequest): AdCreateResponse =
         appSettings.controllerHelper(
-            { fromTransport(request) },
+            { fromTransport(request).apply { workMode =MkplWorkMode.STUB}.also { stubCase=MkplStubs.SUCCESS } },
+            //{ fromTransport(request)},
             { toTransportAd() as AdCreateResponse },
             ControllerV2Test::class,
             "controller-v2-test"
         )
 
-    class TestApplicationCall(private val request: IRequest) {
-        var res: BaseResponse? = null
-
-        @Suppress("UNCHECKED_CAST")
-        fun <T : IRequest> receive(): T = request as T
-        fun respond(res: BaseResponse) {
-            this.res = res
-        }
-    }
 
 
 

@@ -11,7 +11,7 @@ import kotlin.test.assertEquals
 class AdUpdateStubTest {
 
     private val processor = MkplAdProcessor()
-    val id:McplAdvertisementId = McplAdvertisementId(1)
+    val id:MkplAdvertisementId = MkplAdvertisementId(1)
     val title = "title Car"
     val description = "desc Car"
     val price = 100000.0
@@ -53,7 +53,7 @@ class AdUpdateStubTest {
             adRequest = MkplAdvertisement(),
         )
         processor.exec(ctx)
-        assertEquals(McplAdvertisementId.NONE, ctx.adResponse.id)
+        assertEquals(MkplAdvertisementId.NONE, ctx.adResponse.id)
         assertEquals("", ctx.adResponse.title)
         assertEquals("", ctx.adResponse.description)
         assertEquals(0.0, ctx.adResponse.price)
@@ -76,7 +76,7 @@ class AdUpdateStubTest {
             ),
         )
         processor.exec(ctx)
-        assertEquals(McplAdvertisementId.NONE, ctx.adResponse.id)
+        assertEquals(MkplAdvertisementId.NONE, ctx.adResponse.id)
         assertEquals("", ctx.adResponse.title)
         assertEquals("", ctx.adResponse.description)
         assertEquals(0.0, ctx.adResponse.price)
@@ -98,7 +98,7 @@ class AdUpdateStubTest {
             ),
         )
         processor.exec(ctx)
-        assertEquals(McplAdvertisementId.NONE, ctx.adResponse.id)
+        assertEquals(MkplAdvertisementId.NONE, ctx.adResponse.id)
         assertEquals("", ctx.adResponse.title)
         assertEquals("", ctx.adResponse.description)
         assertEquals(0.0, ctx.adResponse.price)
@@ -119,7 +119,7 @@ class AdUpdateStubTest {
             ),
         )
         processor.exec(ctx)
-        assertEquals(McplAdvertisementId.NONE, ctx.adResponse.id)
+        assertEquals(MkplAdvertisementId.NONE, ctx.adResponse.id)
         assertEquals("", ctx.adResponse.title)
         assertEquals("", ctx.adResponse.description)
         assertEquals(0.0, ctx.adResponse.price)
@@ -141,7 +141,7 @@ class AdUpdateStubTest {
             ),
         )
         processor.exec(ctx)
-        assertEquals(McplAdvertisementId.NONE, ctx.adResponse.id)
+        assertEquals(MkplAdvertisementId.NONE, ctx.adResponse.id)
         assertEquals("", ctx.adResponse.title)
         assertEquals("", ctx.adResponse.description)
         assertEquals(0.0, ctx.adResponse.price)

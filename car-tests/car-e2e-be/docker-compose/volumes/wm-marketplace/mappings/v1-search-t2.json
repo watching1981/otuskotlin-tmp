@@ -1,0 +1,67 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/v1/ad/search",
+    "bodyPatterns": [
+      {"matchesJsonPath": "$[?(@.brand == 'Toyota')]"}
+    ]
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "responseType": "search",
+      "result": "success",
+      "ads": [
+        {
+          "id": 123456,
+          "lock": "lock-abc123",
+          "title": "Toyota 2020 года",
+          "description": "Автомобиль в отличном состоянии",
+          "price": 1500000.0,
+          "carInfo": {
+            "brand": "Toyota",
+            "model": "Camry",
+            "year": 2020,
+            "mileage": 50000,
+            "color": "Черный",
+            "engineType": "GASOLINE",
+            "engineVolume": 2.5,
+            "horsePower": 181,
+            "transmission": "AUTOMATIC"
+          },
+          "status": "ACTIVE",
+          "location": "Москва",
+          "contactPhone": "+79991234567",
+          "createdAt": "2024-01-15T10:30:00Z",
+          "updatedAt": "2024-01-15T10:30:00Z"
+        },
+        {
+          "id": 123457,
+          "lock": "lock-abc124",
+          "title": "Toyota 2022 года",
+          "description": "Автомобиль в отличном состоянии",
+          "price": 1500000.0,
+          "carInfo": {
+            "brand": "Toyota",
+            "model": "RAV4",
+            "year": 2022,
+            "mileage": 50000,
+            "color": "Черный",
+            "engineType": "GASOLINE",
+            "engineVolume": 2.5,
+            "horsePower": 181,
+            "transmission": "AUTOMATIC"
+          },
+          "status": "ACTIVE",
+          "location": "Москва",
+          "contactPhone": "+79991234567",
+          "createdAt": "2024-01-15T10:30:00Z",
+          "updatedAt": "2024-01-15T10:30:00Z"
+        }
+      ]
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

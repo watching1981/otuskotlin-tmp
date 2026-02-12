@@ -1,0 +1,23 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/v1/ad/get"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "responseType": "get",
+      "result": "success",
+      "ad": {
+        "id": "{{{jsonPath request.body '$.id'}}}",
+        "title": "Toyota Camry 2019 года в отличном состоянии",
+        "description": "Автомобиль в идеальном состоянии, один хозяин, полная сервисная история. Без ДТП.",
+        "price": "1500000.0"
+      }
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "transformers": ["response-template"]
+  }
+}

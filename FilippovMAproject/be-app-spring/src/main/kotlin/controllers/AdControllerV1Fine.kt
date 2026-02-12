@@ -5,12 +5,15 @@ import com.github.watching1981.app.spring.config.MkplAppSettings
 import com.github.watching1981.api.v1.models.*
 import com.github.watching1981.api.v1.models.IRequest
 import com.github.watching1981.app.common.controllerHelper
+import com.github.watching1981.common.models.MkplWorkMode
 import com.github.watching1981.mappers.v1.*
 import kotlin.reflect.KClass
 
+
 @Suppress("unused")
 @RestController
-@RequestMapping("v1/ad")
+@RequestMapping("v1/ad") //общая часть url эндпоинта. К ней будут добавляться части, которые конкретно отвечают за десвие с
+//объявлением. Например v1/ad/create - запрос к эндпоинту на создание объявления. Все части описаны ниже
 class AdControllerV1Fine(
     private val appSettings: MkplAppSettings
 ) {
@@ -45,11 +48,13 @@ class AdControllerV1Fine(
             logId: String,
         ): R = appSettings.controllerHelper(
             {
-                fromTransport(request as IRequest)
+                fromTransport(request as IRequest) //обогащение контекста полями из запроса
             },
-            { toTransportAd() as R },
+            { toTransportAd() as R }, //преобразование получившегося контекста в ответ (нужен чтоб понимать успешно ли выполнились
+            // действия над контекстом, которые запускаются в controllerHelper)
             clazz,
             logId,
         )
     }
 }
+

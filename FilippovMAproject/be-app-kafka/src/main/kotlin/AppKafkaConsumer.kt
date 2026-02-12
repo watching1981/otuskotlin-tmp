@@ -17,6 +17,8 @@ import com.github.watching1981.app.kafka.AppKafkaConfig
 import com.github.watching1981.app.kafka.IConsumerStrategy
 import com.github.watching1981.app.kafka.createKafkaConsumer
 import com.github.watching1981.app.kafka.createKafkaProducer
+import com.github.watching1981.common.models.MkplWorkMode
+import com.github.watching1981.common.stubs.MkplStubs
 import java.time.Duration
 import java.util.*
 
