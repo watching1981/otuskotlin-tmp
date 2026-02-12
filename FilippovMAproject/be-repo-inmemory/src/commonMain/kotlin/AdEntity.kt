@@ -63,6 +63,7 @@ fun toInternal()= MkplAdvertisement(
         status = status?.let {
             McplAdvertisementStatus.values().find { st -> st.name == it }
         } ?: McplAdvertisementStatus.ACTIVE,
+        contactPhone = contactPhone ?: "",
         createdAt = createdAt?.toInstantOrNull(),
         updatedAt = updatedAt?.toInstantOrNull()
     )

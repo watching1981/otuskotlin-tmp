@@ -20,10 +20,10 @@ springdoc:
   swagger-ui:
     use-root-path: true
     urls:
-      - name: v1
+      - name: spec
         url: specs-ad-v1.yaml
-      - name: v2
-        url: specs-ad-v2.yaml
+#      - name: v2
+#        url: specs-ad-v2.yaml
 
 marketplace:
   repository:
