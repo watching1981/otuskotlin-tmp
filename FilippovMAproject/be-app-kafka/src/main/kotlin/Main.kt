@@ -5,7 +5,8 @@ import com.github.watching1981.marketplace.app.kafka.AppKafkaConsumer
 fun main() {
 
     val config = AppKafkaConfig()
-    val consumer = AppKafkaConsumer(config, listOf(ConsumerStrategyV1(), ConsumerStrategyV2()))
+    //val consumer = AppKafkaConsumer(config, listOf(ConsumerStrategyV1(), ConsumerStrategyV2()))
+    val consumer = AppKafkaConsumer(config, listOf(ConsumerStrategyV1()))
     consumer.start()
 }
 

@@ -61,7 +61,7 @@ class AppKafkaConsumer(
                     try {
                         val (_, outputTopic, strategy) = topicsAndStrategyByInputTopic[record.topic()]
                             ?: throw RuntimeException("Receive message from unknown topic ${record.topic()}")
-
+                        //resp - это обращение к нашей бизнес логиге с запуском цепочки ответственности
                         val resp = config.controllerHelper(
                             { strategy.deserialize(record.value(), this) },
                             { strategy.serialize(this) },

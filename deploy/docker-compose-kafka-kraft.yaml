@@ -23,7 +23,7 @@ services:
       KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
 
   app:
-    image: com.github.watching1981/car-market-app-kafka:0.0.1
+    image: com.github.watching1981/be-app-kafka:0.0.1
     depends_on:
       - kafka
     links:
@@ -32,6 +32,16 @@ services:
       KAFKA_HOSTS: kafka:19092
       KAFKA_TOPIC_IN_V1: cars-ad-v1-in
       KAFKA_TOPIC_OUT_V1: cars-ad-v1-out
-      KAFKA_TOPIC_IN_V2: cars-ad-v2-in
-      KAFKA_TOPIC_OUT_V2: cars-ad-v2-out
+
+#  kafdrop:
+#    image: obsidiandynamics/kafdrop
+#    container_name: kafdrop
+#    restart: "no"
+#    ports:
+#      - "9000:9000"
+#    environment:
+#      KAFKA_BROKERCONNECT: "kafka:29092"
+#    #      JVM_OPTS: "-Xms16M -Xmx48M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify"
+#    depends_on:
+#      - "kafka"
 
