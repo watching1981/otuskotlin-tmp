@@ -16,6 +16,12 @@ dependencies {
     implementation("com.github.watching1981.car:car-lib-logging-logback")
 
     implementation(project(":be-app-common"))
+    implementation(projects.beRepoStubs)
+    implementation(projects.beRepoInmemory)
+    implementation(projects.beRepoPgjvm)
+    testImplementation(projects.beRepoCommon)
+    testImplementation(projects.beStubs)
+
 
     // transport models
     implementation(project(":be-common"))

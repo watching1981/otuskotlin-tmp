@@ -13,7 +13,7 @@ import kotlin.test.Test
  * Для запуска этого теста, требуется поднять Кафку на порту 9092.
  * Поднять можно с помощью /deploy/docker-compose-kafka-kraft.yml
  */
-//@Ignore
+@Ignore
 class SimpleKafkaTest {
     private val topicName = "producer-topic"
 
