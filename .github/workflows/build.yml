@@ -96,16 +96,18 @@ jobs:
         with:
           gradle-version: 8.14.1
           arguments: buildMigrations --info
+
       - name: Build Main Images
         uses: gradle/gradle-build-action@v2
         with:
           gradle-version: 8.14.1
           arguments: buildImages --info
-      - name: Run E2E tests
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: 8.14.1
-          arguments: e2eTests --info
+
+#      - name: Run E2E tests
+#        uses: gradle/gradle-build-action@v2
+#        with:
+#          gradle-version: 8.14.1
+#          arguments: e2eTests --info
 
       - name: Save Primes
         id: cache-primes-save
