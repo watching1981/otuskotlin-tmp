@@ -31,10 +31,38 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      # КРИТИЧЕСКИ ВАЖНО: Обновление Docker CLI до актуальной версии
+      - name: Update Docker CLI to fix API version mismatch
+        run: |
+          echo "Current Docker version:"
+          docker --version
+          docker version --format '{{.Client.APIVersion}}' || echo "API version check failed"
+          
+          # Удаляем старый Docker CLI и устанавливаем новый
+          sudo systemctl stop docker || true
+          sudo apt-get remove -y docker-ce-cli || true
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          sudo sh get-docker.sh
+          # Добавляем пользователя в группу docker (важно для доступа без sudo)
+          sudo usermod -aG docker $USER
+          
+          # Запускаем и включаем Docker
+          sudo systemctl start docker
+          sudo systemctl enable docker
+          
+          # Даем права на сокет (на всякий случай, но группа docker должна работать)
+          sudo chmod 666 /var/run/docker.sock || true          
+          echo "Updated Docker version:"
+          docker --version
+          docker version --format 'Client API version: {{.Client.APIVersion}}'
+          docker version --format 'Server API version: {{.Server.APIVersion}}'
+          
+          # Проверяем доступность Docker
+          docker info
 #        with:
 #          submodules: recursive
 #          token: ${{ secrets.PAT_TOKEN }}
-
       - name: Restore cached Primes
         id: cache-primes-restore
         uses: actions/cache/restore@v4
@@ -49,19 +77,6 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-
-      - name: Update Docker CLI
-        run: |
-          curl -fsSL https://get.docker.com -o get-docker.sh
-          sudo sh get-docker.sh
-          docker version
-
-#      # ✅ Проверяем, что Docker работает
-#      - name: Verify Docker
-#        run: |
-#          docker version
-#          docker-compose version
-#          echo "DOCKER_HOST=unix:///var/run/docker.sock"
 
 
       #      - name: Validate Gradle wrapper
