@@ -22,4 +22,4 @@ pluginManagement {
 
 include(":other-dcompose")
 include(":other-migration-pg")
-include(":other-migration-cs")
+//include(":other-migration-cs")

@@ -10,8 +10,8 @@ plugins {
 
 rootProject.name = "otuskotlin-tmp"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-//includeBuild("lessons")
 includeBuild("FilippovMAproject")
 includeBuild("car-libs")
 includeBuild("car-other")
 includeBuild("car-tests")
+includeBuild("build-plugin")
