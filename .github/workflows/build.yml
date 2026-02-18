@@ -56,12 +56,12 @@ jobs:
           sudo sh get-docker.sh
           docker version
 
-      # ✅ Проверяем, что Docker работает
-      - name: Verify Docker
-        run: |
-          docker version
-          docker-compose version
-          echo "DOCKER_HOST=unix:///var/run/docker.sock"
+#      # ✅ Проверяем, что Docker работает
+#      - name: Verify Docker
+#        run: |
+#          docker version
+#          docker-compose version
+#          echo "DOCKER_HOST=unix:///var/run/docker.sock"
 
 
       #      - name: Validate Gradle wrapper
