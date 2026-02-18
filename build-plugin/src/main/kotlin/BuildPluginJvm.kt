@@ -1,4 +1,5 @@
-package ru.otus.otuskotlin.marketplace.plugin
+//package ru.otus.otuskotlin.marketplace.plugin
+package com.github.watching1981.plugin
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
