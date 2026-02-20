@@ -3,10 +3,14 @@ version: '3.9'
 networks:
   app-network:
     driver: bridge
+  opensearch-net:
+    driver: bridge
 
 volumes:
   postgres-data:
   kafka-data:
+  opensearch-data1:
+  opensearch-data2:
 
 services:
   app-spring:
@@ -22,6 +26,10 @@ services:
       MKPLADS_USER: "postgres"
       MKPLADS_PASS: "car-pass"
       THC_PATH: "/actuator/health"
+      LOGS_FB_HOSTS: "fluent-bit"  # вместо 127.0.0.1
+      LOGS_FB_PORT: "24224"
+      SERVICE_NAME: "spring-app"
+
     depends_on:
       psql:
         condition: service_healthy
@@ -31,6 +39,14 @@ services:
       test: ["CMD", "/workspace/health-check"]
     networks:
       - app-network
+    logging:
+      driver: fluentd
+      options:
+#        fluentd-address: localhost:24224
+        fluentd-address: fluent-bit:24224
+        tag: "spring-app"
+        fluentd-async: "true"
+
   psql:
     image: postgres
 #    container_name: marketplace-postgres
@@ -43,12 +59,20 @@ services:
 #    volumes:
 #      - postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready" ]
+#      test: [ "CMD-SHELL", "pg_isready" ]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d cars_ads" ]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
       - app-network
+    logging:
+      driver: fluentd
+      options:
+#        fluentd-address: fluent-bit:24224
+        fluentd-address: localhost:24224
+        tag: "postgres"
+        fluentd-async: "true"
 
   liquibase:
     image: "other-migration-pg"
@@ -66,6 +90,12 @@ services:
         condition: service_healthy
     networks:
       - app-network
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: fluent-bit:24224
+        tag: "liquibase"
+        fluentd-async: "true"
 
   # Kafka (KRaft mode)
   kafka:
@@ -101,6 +131,13 @@ services:
       start_period: 30s
     networks:
       - app-network
+    logging:
+      driver: fluentd
+      options:
+#        fluentd-address: fluent-bit:24224
+        fluentd-address: localhost:24224
+        tag: "kafka"
+        fluentd-async: "true"
 
   # Kafka UI (для мониторинга)
   kafka-ui:
@@ -116,6 +153,12 @@ services:
         condition: service_healthy
     networks:
       - app-network
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: fluent-bit:24224
+        tag: "kafka-ui"
+        fluentd-async: "true"
 
   app-kafka-consumer:
 #    image: com.github.watching1981/be-app-kafka:0.0.1
@@ -140,3 +183,100 @@ services:
       MKPLADS_PASS: car-pass
     networks:
       - app-network
+    logging:
+      driver: fluentd
+      options:
+#        fluentd-address: fluent-bit:24224
+        fluentd-address: localhost:24224
+        tag: "kafka-consumer"
+        fluentd-async: "true"
+
+  # ========== НОВЫЕ СЕРВИСЫ ДЛЯ ЛОГИРОВАНИЯ ==========
+
+  opensearch:
+    image: opensearchproject/opensearch:latest
+#    container_name: opensearch
+    environment:
+      - cluster.name=opensearch-cluster
+      - node.name=opensearch
+      - discovery.type=single-node  # ВАЖНО: режим одного узла!
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=Joker_1981
+      - DISABLE_SECURITY_PLUGIN=false
+      - plugins.security.disabled=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - opensearch-data1:/usr/share/opensearch/data
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+    networks:
+      - opensearch-net
+    healthcheck:
+#      test: ["CMD", "curl", "-f", "-k", "https://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=1s"]
+      test: ["CMD", "curl", "-f", "-k", "-u", "admin:Joker_1981", "https://localhost:9200/_cluster/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+#    logging:
+#      driver: fluentd
+#      options:
+#        fluentd-address: localhost:24224
+#        tag: "opensearch"
+#        fluentd-async: "true"
+
+  # OpenSearch Dashboards (веб-интерфейс)
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:latest
+#    container_name: opensearch-dashboards
+    ports:
+      - "5601:5601"
+    environment:
+      OPENSEARCH_HOSTS: '["https://opensearch:9200"]'
+      OPENSEARCH_SSL_VERIFICATION: false
+      DISABLE_SECURITY_DASHBOARDS_PLUGIN: "false"
+    networks:
+      - opensearch-net
+    depends_on:
+      opensearch:
+        condition: service_healthy
+#    logging:
+#      driver: fluentd
+#      options:
+#        fluentd-address: localhost:24224
+#        tag: "opensearch-dashboards"
+#        fluentd-async: "true"
+
+  # Fluent Bit для сбора логов (без изменений)
+  fluent-bit:
+    image: fluent/fluent-bit:latest
+#    container_name: fluent-bit
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+      - "5170:5170"
+      - "2020:2020"
+    volumes:
+      - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+      - ./parsers.conf:/fluent-bit/etc/parsers.conf
+    networks:
+      - app-network
+      - opensearch-net
+    depends_on:
+      opensearch:
+        condition: service_healthy
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: 127.0.0.1:24224
+        tag: "fluent-bit"
+        fluentd-async: "true"
+
